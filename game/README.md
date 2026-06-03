@@ -1,17 +1,23 @@
-## Tabalho 1 - Jogo
-
-- [Jogo](../README.md)
-
-## Integrantes da Equipe:
-
-- Giovana Lins Cavalcanti
-- Arthur Capucho
-- Arthur Matias
+# Tabalho 1 - Jogo (Caves of Nodes)
 
 ## Divisão de Responsabilidades
+- Giovana Lins Cavalcanti: entidades e CSS
+- Arthur Capucho: engine
+- Arthur Matias: engine e UI
 
+## Descrição do Funcionamento
+Navegue pelos nós do grafo por meio das setas do teclado e escolha o destino com R.
 
+## Intrução para execução
+Com vite:
+```
+npm run dev
+```
 
 ## Créditos
-Efeitos sonoros vindos do site [Orange Free Sounds](https://orangefreesounds.com).
-Sprites vindos do jogo [Caves of Qud](https://www.cavesofqud.com/).
+Efeitos sonoros:
+- [Orange Free Sounds](https://orangefreesounds.com)
+- [SoundBible](https://soundbible.com)
+- [YouTube Audio Libray](https://www.youtube.com/audiolibrary)
+
+Sprites: [Caves of Qud](https://www.cavesofqud.com/)

@@ -1,50 +1,51 @@
 import { Entidade, type Habilidade } from "./Entidade.js";
+import { espada1, espada2, espada3 } from "./../constants.js";
 
 const HABILIDADES_INICIAIS: Habilidade[] = [
     {
-        nome: "Ataque Básico",
+        nome: "Espadada",
         descricao: "Ataque simples com a espada",
         custoMP: 0,
-        danoBase: 0,
         cura: 0,
         alcance: 2,
-        tipo: 'ataque'
+        tipo: 'ataque',
+        som: espada1
     },
     {
         nome: "Golpe Forte",
         descricao: "Ataque poderoso que causa 2x dano",
         custoMP: 5,
-        danoBase: 0,
         cura: 0,
         alcance: 2,
-        tipo: 'ataque'
+        tipo: 'ataque',
+        som: espada2
     },
     {
         nome: "Postura Defensiva",
         descricao: "Dobra a defesa por um turno",
         custoMP: 3,
-        danoBase: 0,
         cura: 0,
         alcance: 0,
-        tipo: 'defesa'
+        tipo: 'defesa',
+        som: null
     },
     {
         nome: "Cura",
         descricao: "Recupera 30% da vida máxima",
         custoMP: 8,
-        danoBase: 0,
         cura: 0.3,
         alcance: 0,
-        tipo: 'cura'
+        tipo: 'cura',
+        som: null
     },
     {
         nome: "Rajada",
         descricao: "Ataque em área que causa 1.5x dano em todos",
         custoMP: 10,
-        danoBase: 0,
         cura: 0,
         alcance: 3,
-        tipo: 'ataquearea'
+        tipo: 'ataquearea',
+        som: espada3
     }
 ];
 
