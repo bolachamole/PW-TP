@@ -1,11 +1,13 @@
+import { magia2 } from "../constants.js";
+
 export interface Habilidade {
     nome: string;
     descricao: string;
     custoMP: number;
-    danoBase: number;
     cura: number;
     alcance: number;
     tipo: 'ataque' | 'cura' | 'defesa' | 'ataquearea';
+    som: HTMLAudioElement | null;
 }
 
 export class Entidade {
@@ -49,10 +51,12 @@ export class Entidade {
 
     curar(quantidade: number): void {
         this.hp = Math.min(this.hpMax, this.hp + quantidade);
+        magia2.play();
     }
 
     usarHabilidade(habilidade: Habilidade): boolean {
         if (this.mp < habilidade.custoMP) return false;
+        if (habilidade.som) habilidade.som.play();
         this.mp -= habilidade.custoMP;
         return true;
     }

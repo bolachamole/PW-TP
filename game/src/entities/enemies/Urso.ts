@@ -1,8 +1,9 @@
+import { corte, urso } from "../../constants.js";
 import { Entidade, type Habilidade } from "../Entidade.js";
 
 const habilidades: Habilidade[] = [
-    { nome: "Garra", descricao: "Golpe de garra", custoMP: 0, danoBase: 0, cura: 0, alcance: 1, tipo: 'ataque' },
-    { nome: "Esmagar", descricao: "Ataque pesado", custoMP: 5, danoBase: 0, cura: 0, alcance: 2, tipo: 'ataque' }
+    { nome: "Garra", descricao: "Golpe de garra", custoMP: 0, cura: 0, alcance: 1, tipo: 'ataque', som: corte },
+    { nome: "Esmagar", descricao: "Ataque pesado", custoMP: 5, cura: 0, alcance: 2, tipo: 'ataque', som: urso }
 ];
 
 export function criarUrso(nivel: number): Entidade {

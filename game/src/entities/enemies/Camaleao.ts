@@ -1,0 +1,11 @@
+import { mordida } from "../../constants.js";
+import { Entidade, type Habilidade } from "../Entidade.js";
+
+const habilidades: Habilidade[] = [
+    { nome: "Mordida", descricao: "Mordida rápida", custoMP: 0, cura: 0, alcance: 1, tipo: 'ataque', som: mordida }
+];
+
+export function criarCamaleao(nivel: number): Entidade {
+    const e = new Entidade("Largato", 20 + nivel * 8, 10, 8 + nivel * 2, 2, habilidades);
+    return e;
+}
