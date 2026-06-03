@@ -1,7 +1,9 @@
-import { jogo } from "./classes/Jogo.js";
+import { jogo } from "./engine/Jogo.js";
 
 function run(){
-  jogo.jogando();
+
+    jogo.executando();
+
 }
 
 run();
