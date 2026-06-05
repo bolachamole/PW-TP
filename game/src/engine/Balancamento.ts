@@ -3,7 +3,7 @@ export const BALANCAMENTO = {
         CUSTO_UPGRADE_BASE: 50,
         PENALIDADE_OURO_MORTE: 0.40,
         PENALIDADE_XP_MORTE: 0.20,
-        OURO_BASE_VITORIA: 1000000,
+        OURO_BASE_VITORIA: 10,
         OURO_ESCALA_MAPA: 5
     },
     PREDIOS: {

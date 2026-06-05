@@ -1,32 +1,121 @@
+import { NavegacaoTecladoMenu } from "../ui/NavegacaoTecladoMenu.js";
+
 export class MenuConfigura {
 
+    private navegacao?: NavegacaoTecladoMenu;
+
     public abrir(container: HTMLElement, quandoVoltar: () => void): void {
-    
+
         container.innerHTML = `
             <h2>Configurações</h2>
+
             <div class="audio-control">
                 <label for="slider-volume">Volume Global:</label>
-                <input type="range" id="slider-volume" min="0" max="1" step="0.1" value="0.5">
+
+                <input
+                    type="range"
+                    id="slider-volume"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value="0.5"
+                >
             </div>
-            <button id="btn-voltar-menu" style="margin-top: 30px;">Voltar</button>
+
+            <button
+                id="btn-voltar-menu"
+                style="margin-top: 30px;"
+            >
+                Voltar
+            </button>
         `;
 
-        const btnVoltar = container.querySelector('#btn-voltar-menu');
-    
-        btnVoltar?.addEventListener('click', () => {
-        
-            console.log("[DEBUG] Voltando para o menu principal...");
-        
-            quandoVoltar(); 
+        const btnVoltar =
+            container.querySelector<HTMLButtonElement>(
+                "#btn-voltar-menu"
+            );
+
+        const slider =
+            container.querySelector<HTMLInputElement>(
+                "#slider-volume"
+            );
+
+        if (!btnVoltar || !slider) {
+            return;
+        }
+
+        btnVoltar.addEventListener("click", () => {
+
+            console.log(
+                "[DEBUG] Voltando para o menu principal..."
+            );
+
+            this.navegacao?.destruir();
+
+            quandoVoltar();
 
         });
 
-        const slider = container.querySelector('#slider-volume') as HTMLInputElement;
-        slider?.addEventListener('input', () => {
+        slider.addEventListener("input", () => {
 
-            console.log(`[DEBUG] Volume alterado para: ${slider.value}`);
+            console.log(
+                `[DEBUG] Volume alterado para: ${slider.value}`
+            );
 
         });
+
+        this.navegacao?.destruir();
+
+        this.navegacao = new NavegacaoTecladoMenu(
+
+            [
+                slider,
+                btnVoltar
+            ],
+
+            () => btnVoltar.click(),
+
+            () => {
+
+                if (
+                    this.navegacao?.obterIndiceSelecionado() !== 0
+                ) {
+                    return;
+                }
+
+                slider.value = Math.max(
+                    0,
+                    Number(slider.value) - 0.1
+                ).toString();
+
+                slider.dispatchEvent(
+                    new Event("input")
+                );
+
+            },
+
+            () => {
+
+                if (
+                    this.navegacao?.obterIndiceSelecionado() !== 0
+                ) {
+                    return;
+                }
+
+                slider.value = Math.min(
+                    1,
+                    Number(slider.value) + 0.1
+                ).toString();
+
+                slider.dispatchEvent(
+                    new Event("input")
+                );
+
+            }
+
+        );
+
+        this.navegacao.iniciar();
 
     }
 

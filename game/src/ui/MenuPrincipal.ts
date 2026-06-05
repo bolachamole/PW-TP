@@ -1,10 +1,12 @@
 import { jogo } from "../engine/Jogo.js";
 import { MenuConfigura } from "../ui/MenuConfigura.js";
+import { NavegacaoTecladoMenu } from "../ui/NavegacaoTecladoMenu.js";
 
 export class MenuPrincipal {
   
     private elementoDOM: HTMLDivElement | null = null;
     private menuConfigura: MenuConfigura = new MenuConfigura();
+    private navegacao?: NavegacaoTecladoMenu;  
 
     public abrir(containerPai: HTMLElement): void {
         if (document.getElementById('menu-principal')) return;
@@ -12,6 +14,14 @@ export class MenuPrincipal {
         this.elementoDOM = document.createElement('div');
         this.elementoDOM.id = 'menu-principal';
         this.elementoDOM.className = 'menu-screen';
+
+        this.elementoDOM.style.backgroundImage = `
+            linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), 
+            url('wallpapers/wallpaper_menu.png')
+        `;
+        this.elementoDOM.style.backgroundSize = "cover"; // Faz a imagem preencher a tela toda
+        this.elementoDOM.style.backgroundPosition = "center"; // Centraliza a arte
+        this.elementoDOM.style.backgroundRepeat = "no-repeat"; // Impede que a imagem se repita se a tela for muito grande
 
         containerPai.appendChild(this.elementoDOM);
         this.conteudoInicialMenuPrincipal();
@@ -71,10 +81,27 @@ export class MenuPrincipal {
                 this.conteudoInicialMenuPrincipal();
             });
         });
+
+        const elementos: HTMLElement[] = [];
+
+        if (btnContinuar) {
+            elementos.push(btnContinuar as HTMLElement);
+        }
+
+        elementos.push(btnJogar as HTMLElement);
+        elementos.push(btnConfigurar as HTMLElement);
+
+        this.navegacao?.destruir();
+
+        this.navegacao =
+            new NavegacaoTecladoMenu(elementos);
+
+        this.navegacao.iniciar();
     }
 
     private fechar(): void {
         if (this.elementoDOM) {
+            this.navegacao?.destruir();
             this.elementoDOM.remove();         
             this.elementoDOM = null; 
             console.log("[DEBUG] MenuPrincipal deletado com sucesso do DOM.");

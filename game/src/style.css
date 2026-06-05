@@ -11,6 +11,34 @@
     --xp-color: #f5c842;
     --success: #4caf50;
     --danger: #f44336;
+    --game-width: 800px;
+    --game-height: 600px;
+
+}
+
+/* Garante que qualquer tela de jogo tenha tamanho fixo e seja centralizada */
+.menu-screen,
+.tela-mundo, 
+.tela-combate, 
+.tela-loja, 
+.tela-evento, 
+.tela-derrota, 
+.tela-vitoria {
+    width: var(--game-width);
+    height: var(--game-height);
+    position: relative; /* Necessário para que elementos absolutos (como popups) fiquem presos à janela */
+    overflow: hidden;   /* Impede que elementos passem das bordas */
+    border: 2px solid var(--accent2); /* Mantém a moldura do jogo */
+    background-color: var(--bg-primary); /* Garante que o fundo não fique transparente */
+}
+
+/* Ajuste específico para o Menu para centralizar os botões */
+.menu-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
 * {
@@ -773,4 +801,149 @@ body {
     object-fit: contain;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+}
+
+/* --- Cenário da Base --- */
+.base-cenario {
+    position: relative;
+    width: 800px;
+    height: 500px;
+    background-image: url('/base/base.png'); /* Crie ou pegue uma imagem de fundo */
+    background-size: cover;
+    background-position: center;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.predio-slot {
+    position: absolute;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.predio-slot:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px var(--accent2));
+}
+
+.predio-slot img {
+    width: 300px; /* Ajuste para o tamanho das suas artes */
+    height: 300px;
+    object-fit: contain;
+}
+
+/* Estado padrão do nome (invisível) */
+.predio-nome {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-top: 5px;
+    pointer-events: none; /* Mantém isso para não bugar o clique */
+    
+    /* Novas regras: Invisível com transição suave */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s;
+}
+
+/* O Segredo: Quando passar o mouse no slot, o nome dentro dele aparece */
+.predio-slot:hover .predio-nome {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Modals / Popups Manuais --- */
+.modal-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-conteudo {
+    position: relative;
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+    padding: 30px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Adicionamos o .base-forte antes para garantir que esta regra vença a regra global */
+.base-forte .btn-fechar-popup {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: var(--danger);
+    color: white;
+    
+    /* Anulações das regras globais do .base-forte button */
+    border: none;
+    min-width: 0; 
+    padding: 0;   
+    
+    /* Formato da bolinha */
+    border-radius: 50%;
+    width: 28px; 
+    height: 28px;
+    
+    /* Centralização perfeita do texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1; /* Garante que o X não fique deslocado pra baixo */
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.base-forte .btn-fechar-popup:hover {
+    background: #d32f2f; 
+    transform: scale(1.1);
+}
+
+
+/* Opcional: remover o outline padrão do browser */
+button:focus { outline: none; }
+
+.menu-selecionado {
+
+    outline: 3px solid #ffd700;
+
+    outline-offset: 4px;
+
+    transform: scale(1.03);
+
+    transition: 0.15s;
+
+}
+
+
+/* Destaque para navegação por teclado */
+button.selecionado, 
+.predio-slot.selecionado {
+    outline: 3px solid var(--accent2);
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+.predio-slot.menu-selecionado,
+button.menu-selecionado,
+select.menu-selecionado {
+
+    outline: 3px solid gold;
+
+    outline-offset: 4px;
+
+    transform: scale(1.05);
+
 }
