@@ -1,155 +1,93 @@
-import { MenuPrincipal } from "../ui/MenuPrincipal.js";
-import { Base } from "../ui/Base.js";
-import { Mundo } from "../ui/Mundo.js";
-import { Combate } from "../ui/Combate.js";
-import { Loja } from "../ui/Loja.js";
-import { Evento } from "../ui/Evento.js";
-import { Derrota } from "../ui/Derrota.js";
-import { Vitoria } from "../ui/Vitoria.js";
-import { GeradorDeGrafos, type NoGrafo } from "./GeradorDeGrafos.js";
 import { Jogador } from "../entities/Jogador.js";
-import { sortearInimigos, criarBoss } from "../entities/Inimigos.js";
-import { espada1, magia1, vitoria } from "../constants.js";
+import type { NoGrafo } from "./GeradorDeGrafos.js";
+import type { Estado } from "./Estado.js";
 
-type EstadoJogo = 'MenuInicial' | 'Base' | 'Mundo' | 'Combate' | 'Loja' | 'Evento' | 'Derrota' | 'Vitoria' | 'Pause';
+// Importação das instâncias dos estados decompostos
+import { MenuInicialState } from "./states/MenuInicialState.js";
+import { BaseState } from "./states/BaseState.js";
+import { MundoState } from "./states/MundoState.js";
+import { CombateState } from "./states/CombateState.js";
+import { LojaState } from "./states/LojaState.js";
+import { EventoState } from "./states/EventoState.js";
+import { DerrotaState } from "./states/DerrotaState.js";
+import { VitoriaState } from "./states/VitoriaState.js";
 
-class Jogo {
-    app: HTMLElement;
-    jogador: Jogador;
+export class Jogo {
+    public app: HTMLElement;
+    public jogador: Jogador;
 
-    private menuPrincipal: MenuPrincipal = new MenuPrincipal();
-    private base: Base = new Base();
-    private mundo: Mundo = new Mundo();
-    private combate: Combate = new Combate();
-    private loja: Loja = new Loja();
-    private evento: Evento = new Evento();
-    private telaDerrota: Derrota = new Derrota();
-    private telaVitoria: Vitoria = new Vitoria();
-    private geradorDeGrafos: GeradorDeGrafos = new GeradorDeGrafos();
+    // Registrador central de estados (mantém dados internos como o Grafo preservados)
+    public estados = {
+        menuInicial: new MenuInicialState(),
+        base: new BaseState(),
+        mundo: new MundoState(),
+        combate: new CombateState(),
+        loja: new LojaState(),
+        evento: new EventoState(),
+        derrota: new DerrotaState(),
+        vitoria: new VitoriaState()
+    };
 
-    private estadoAtual: EstadoJogo = 'MenuInicial';
-    private grafoAtual: Record<string, NoGrafo> = {};
-    private profundidadeAtual: number = 4;
-    private noAtualId: string | null = null;
+    private estadoAtual: Estado | null = null;
 
     constructor() {
         this.app = document.getElementById("app")!;
         this.jogador = new Jogador();
     }
 
-    private mudarEstado(novoEstado: EstadoJogo): void {
+    /**
+     * Motor da FSM: Desativa o estado anterior e injeta o novo contexto de execução
+     */
+    public transicionarPara(novoEstado: Estado, ...args: any[]): void {
+        if (this.estadoAtual) {
+            this.estadoAtual.sair();
+        }
         this.estadoAtual = novoEstado;
-        console.log(`[DEBUG] Estado alterado para ${novoEstado}`);
+        console.log(`[FSM DEBUG] Transição de estado ativa para: ${novoEstado.constructor.name}`);
+        this.estadoAtual.entrar(this, this.app, ...args);
     }
 
+    // --- MÉTODOS DE COMPATIBILIDADE DE API (Evita quebras nas telas de UI) ---
+
     executando(): void {
-        
-        if (this.estadoAtual === 'MenuInicial') {
-        
-            this.menuPrincipal.abrir(this.app);
-        
+        if (!this.estadoAtual) {
+            this.transicionarPara(this.estados.menuInicial);
         }
-
-        if (this.estadoAtual === 'Base') {
-        
-            this.base.iniciarPartida(this.app);
-        
-        }
-
     }
 
     iniciarPartida(): void {
         this.jogador.mapaAtual = 0;
-        this.profundidadeAtual = 4;
-        this.mudarEstado('Base');
-        this.executando();
+        
+        // Reseta o estado específico da expedição do grafo para uma run totalmente limpa
+        this.estados.mundo.profundidadeAtual = 4;
+        this.estados.mundo.grafoAtual = {};
+        this.estados.mundo.noAtualId = null;
+
+        this.transicionarPara(this.estados.base);
     }
 
     iniciarMenu(): void {
-        this.mudarEstado('MenuInicial');
-        this.executando();
+        this.transicionarPara(this.estados.menuInicial);
     }
 
     iniciarMundo(): void {
-        this.grafoAtual = this.geradorDeGrafos.gerarMapa(this.profundidadeAtual, 4);
-        this.desbloquearProximosNos('no_0_0');
-        this.noAtualId = 'no_0_0';
-        this.mudarEstado('Mundo');
-        this.mundo.abrir(this.app, this.grafoAtual, this.noAtualId);
-    }
-
-    private desbloquearProximosNos(idNo: string): void {
-        
-        const no = this.grafoAtual[idNo];
-
-        if (!no) return;
-
-        for (const proxId of no.proximos) {
-
-            const prox = this.grafoAtual[proxId];
-
-            if (prox) {
-
-                prox.status = 'disponivel';
-
-            }
-
-        }
-
+        this.estados.mundo.gerarNovoMapa(this);
+        this.transicionarPara(this.estados.mundo);
     }
 
     entrarNoNo(no: NoGrafo): void {
-
-        this.noAtualId = no.id;
-        this.desbloquearProximosNos(no.id);
-        this.jogador.resetarParaNovoMapa();
-
-        switch (no.tipo) {
-            case 'Combate': {
-                this.mudarEstado('Combate');
-                const quantidade = 2 + Math.floor(this.jogador.mapaAtual * 0.5);
-                const inimigos = sortearInimigos(quantidade, this.jogador.mapaAtual + 1);
-                espada1.play().catch(() => {});
-                this.combate.abrir(this.app, inimigos);
-                break;
-            }
-            case 'Boss': {
-                this.mudarEstado('Combate');
-                const boss = criarBoss(this.jogador.mapaAtual + 1);
-                const aliados = sortearInimigos(1, this.jogador.mapaAtual + 1);
-                magia1.play().catch(() => {});
-                this.combate.abrir(this.app, [boss, ...aliados]);
-                break;
-            }
-            case 'Loja': {
-                this.mudarEstado('Loja');
-                this.loja.abrir(this.app);
-                break;
-            }
-            case 'Evento': {
-                this.mudarEstado('Evento');
-                this.evento.abrir(this.app);
-                break;
-            }
-            default: {
-                this.voltarParaMundo();
-            }
-        }
+        this.estados.mundo.entrarNoNo(this, this.app, no);
     }
 
     vitoriaCombate(): void {
-        vitoria.play().catch(() => {});
-
-        if (this.noAtualId) {
-            const noBoss = this.grafoAtual[this.noAtualId];
+        const mundo = this.estados.mundo;
+        if (mundo.noAtualId) {
+            const noBoss = mundo.grafoAtual[mundo.noAtualId];
             if (noBoss?.tipo === 'Boss') {
-                console.log("[DEBUG] Boss derrotado! Retornando ao Hamlet com os despojos.");
-
+                console.log("[DEBUG] Boss derrotado! Salvando despojos e retornando à base.");
                 this.jogador.aplicarHabilidadeTemporaria(null); 
                 this.jogador.salvar();
-
-                this.mudarEstado('Base');
-                this.base.iniciarPartida(this.app);
+                this.transicionarPara(this.estados.vitoria);
                 return;
             }
         }
@@ -158,51 +96,73 @@ class Jogo {
         this.voltarParaMundo();
     }
 
-    getNoAtualId(): string | null {
-        return this.noAtualId;
+    retornarParaBase(): void {
+        this.transicionarPara(this.estados.base);
     }
 
     derrota(): void {
-        this.mudarEstado('Derrota');
-        this.telaDerrota.abrir(this.app);
+        this.transicionarPara(this.estados.derrota);
     }
 
     voltarParaMundo(): void {
-        if (this.estadoAtual === 'Vitoria') return;
+        this.estados.mundo.voltarParaMundo(this, this.app);
+    }
 
-        const todosNaoBoss = Object.values(this.grafoAtual).filter(n => n.tipo !== 'Boss');
-        const todosVisitados = todosNaoBoss.every(n => n.status === 'visitado' || n.status === 'bloqueado');
+    getNoAtualId(): string | null {
+        return this.estados.mundo.noAtualId;
+    }
 
-        if (todosVisitados) {
-            const boss = Object.values(this.grafoAtual).find(n => n.tipo === 'Boss');
-            if (boss) {
-                boss.status = 'disponivel';
-                if (this.noAtualId && this.grafoAtual[this.noAtualId]) {
-                    const noAtual = this.grafoAtual[this.noAtualId];
-                    if (!noAtual.proximos.includes(boss.id)) {
-                        noAtual.proximos.push(boss.id);
-                    }
-                }
-            }
-        }
+    /**
+     * Reseta completamente a memória do jogo (Herói e Acampamento) para um Novo Jogo do zero.
+     */
+    novoJogoPartida(): void {
+        console.log("[FSM] Limpando registros do localStorage para Novo Jogo...");
+        
+        // 1. Apaga fisicamente as chaves do navegador
+        localStorage.removeItem('caves_of_memory_save');
+        localStorage.removeItem('caves_of_memory_progresso');
 
-        if (this.noAtualId && this.grafoAtual[this.noAtualId]) {
-            const noAtual = this.grafoAtual[this.noAtualId];
-            const temDisponivel = noAtual.proximos.some(id => this.grafoAtual[id]?.status === 'disponivel');
+        // 2. Força o reinício dos atributos do Singleton de Progresso Global
+        import("./ProgressoGlobal.js").then(({ progressoGlobal }) => {
+            progressoGlobal.ouro = 0;
+            progressoGlobal.nivelPredioCura = 0;
+            progressoGlobal.nivelPredioTreinamento = 0;
+            progressoGlobal.nivelPredioHabilidades = 0;
+            progressoGlobal.habilidadeBonusProximaRun = null;
+            progressoGlobal.salvar();
+        });
 
-            if (!temDisponivel && !todosVisitados) {
-                const algumDisponivel = Object.values(this.grafoAtual).some(n => n.status === 'disponivel');
-                if (!algumDisponivel) {
-                    this.jogador.mapaAtual++;
-                    this.profundidadeAtual = Math.min(8, this.profundidadeAtual + 1);
-                    this.iniciarMundo();
-                    return;
-                }
-            }
-        }
+        // 3. Re-instancia um jogador totalmente limpo com atributos iniciais de balanceamento
+        import("../entities/Jogador.js").then(({ Jogador }) => {
+            this.jogador = new Jogador();
+            
+            // 4. Inicializa o grafo e transiciona para a base
+            this.jogador.mapaAtual = 0;
+            this.estados.mundo.profundidadeAtual = 4;
+            this.estados.mundo.grafoAtual = {};
+            this.estados.mundo.noAtualId = null;
 
-        this.mudarEstado('Mundo');
-        this.mundo.abrir(this.app, this.grafoAtual, this.noAtualId);}
+            this.transicionarPara(this.estados.base);
+        });
+    }
+
+    /**
+     * Carrega os dados persistidos e envia o herói de volta ao Acampamento para continuar a expedição.
+     */
+    continuarPartida(): void {
+        console.log("[FSM] Continuando jogo: Sincronizando dados salvos do Herói...");
+        
+        // Recarrega os atributos e grimório que estão guardados no save
+        this.jogador.carregar();
+        
+        // Garante que o estado modular do mapa de nós seja resetado para a nova run, preservando o nível do herói
+        this.estados.mundo.profundidadeAtual = 4;
+        this.estados.mundo.grafoAtual = {};
+        this.estados.mundo.noAtualId = null;
+
+        // Direciona o jogador diretamente para a Base fortificada
+        this.transicionarPara(this.estados.base);
+    }
 }
 
 export const jogo = new Jogo();

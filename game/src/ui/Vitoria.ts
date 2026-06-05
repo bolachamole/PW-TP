@@ -22,10 +22,10 @@ export class Vitoria {
             <div class="vitoria-card">
                 <h1>🏆 Vitória!</h1>
                 <p>John Ancestoor triunfou sobre o Guardião do Abismo!</p>
-                <p>Mapas concluídos: ${jogo.jogador.mapaAtual}</p>
-                <p>Nível final: ${jogo.jogador.nivel}</p>
-                <p>XP total: ${jogo.jogador.xp}</p>
-                <button id="btn-vitoria-menu">Menu Principal (R)</button>
+                <p>Mapas concluídos: <strong>${jogo.jogador.mapaAtual}</strong></p>
+                <p>Nível final: <strong>${jogo.jogador.nivel}</strong></p>
+                <p>XP total: <strong>${jogo.jogador.xp}</strong></p>
+                <button id="btn-vitoria-base">Retornar à Base (R)</button>
             </div>
         `;
 
@@ -33,15 +33,15 @@ export class Vitoria {
             if (e.key === 'r' || e.key === 'R') {
                 e.preventDefault();
                 this.fechar();
-                jogo.iniciarMenu();
+                jogo.retornarParaBase();
             }
         };
 
         window.addEventListener('keydown', this.listenerTeclado);
 
-        this.elementoDOM.querySelector('#btn-vitoria-menu')?.addEventListener('click', () => {
+        this.elementoDOM.querySelector('#btn-vitoria-base')?.addEventListener('click', () => {
             this.fechar();
-            jogo.iniciarMenu();
+            jogo.retornarParaBase();
         });
     }
 
