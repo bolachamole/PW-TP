@@ -2,8 +2,8 @@
     --bg-primary: #0f3b3a;
     --bg-secondary: rgba(5,20,20,0.95);
     --bg-card: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px);
-    --accent: rgba(5,20,20,0.95);
-    --accent2: #f5c842;
+    --accent: #rgba(5,20,20,0.95);
+    --accent2: #c9c9c9;
     --text-primary: #69A9B9;
     --text-secondary: #aaa;
     --hp-color: #e94560;
@@ -13,7 +13,6 @@
     --danger: #f44336;
     --game-width: 800px;
     --game-height: 600px;
-
 }
 
 /* Garante que qualquer tela de jogo tenha tamanho fixo e seja centralizada */
@@ -28,7 +27,6 @@
     height: var(--game-height);
     position: relative; /* Necessário para que elementos absolutos (como popups) fiquem presos à janela */
     overflow: hidden;   /* Impede que elementos passem das bordas */
-    border: 2px solid var(--accent2); /* Mantém a moldura do jogo */
     background-color: var(--bg-primary); /* Garante que o fundo não fique transparente */
 }
 
@@ -78,7 +76,7 @@ body {
 .menu-screen h1, .base-forte h1 {
     font-size: 3em;
     color: var(--accent2);
-    text-shadow: 0 0 20px rgba(245, 200, 66, 0.5);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     margin-bottom: 20px;
 }
 
@@ -213,11 +211,6 @@ body {
     transform: translate(-50%, -50%) scale(1.15);
 }
 
-.mundo-no.atual {
-    border-color: #4fc3f7;
-    box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
-}
-
 .mundo-no-icone {
     display: flex;
     align-items: center;
@@ -232,16 +225,28 @@ body {
     color: var(--text-secondary);
 }
 
+.mundo-acoes,
 .mundo-lista-panel {
     position: absolute;
     bottom: 20px;
-    left: 20px;
     background: var(--bg-card);
+    border: 1px solid var(--accent2);
     border-radius: 8px;
+}
+
+.mundo-lista-panel {
+    left: 20px;
     padding: 10px;
     min-width: 180px;
     max-width: 260px;
     z-index: 15;
+}
+
+.mundo-acoes {
+    right: 20px;
+    padding: 12px 24px;
+    text-align: center;
+    z-index: 10;
 }
 
 .mundo-lista-titulo {
@@ -308,25 +313,13 @@ body {
     font-style: italic;
 }
 
-.mundo-acoes {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    background: var(--bg-card);
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: 1px solid var(--accent2);
-    text-align: center;
-    z-index: 10;
-}
-
 /* Combate */
 .tela-combate {
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #2a1a1a;
+    background: var(--bg-secondary);
     position: relative;
     overflow: hidden;
 }
@@ -339,7 +332,6 @@ body {
     padding: 8px 16px;
     gap: 8px;
     background: rgba(0,0,0,0.5);
-    border-bottom: 2px solid #444;
     flex-shrink: 0;
     max-height: 30vh;
     overflow-y: auto;
@@ -431,7 +423,7 @@ body {
     grid-template-rows: repeat(var(--altura, 6), 1fr);
     gap: 1px;
     padding: 6px;
-    background: #2d1f1f;
+    background: var(--bg-primary);
     min-height: 0;
     overflow: hidden;
 }
@@ -440,37 +432,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #3d2a2a;
-    border-radius: 3px;
     font-size: clamp(0.7em, 2.5vw, 1.3em);
     min-height: 30px;
     transition: background 0.2s;
 }
 
-.combate-cell.jogador {
-    background: #2a4a2a;
-    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
-}
-
-.combate-cell.inimigo {
-    background: #4a2a2a;
-    box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
-}
-
 .combate-cell.movevel {
-    background: #3a4a3a;
+    background: rgba(162, 188, 163, 0.5);
     cursor: pointer;
 }
 
 .combate-cell.alvo-possivel {
     background: #5a2a3a;
-    box-shadow: 0 0 12px rgba(233, 69, 96, 0.5);
     cursor: pointer;
 }
 
 .combate-cell.alvo-selecionado {
     background: #8a1a2a;
-    box-shadow: 0 0 20px rgba(233, 69, 96, 0.8), inset 0 0 15px rgba(255, 200, 0, 0.3);
     cursor: pointer;
     transform: scale(1.05);
     z-index: 5;
@@ -501,7 +479,6 @@ body {
 .combate-acoes {
     padding: 6px 12px;
     background: rgba(0,0,0,0.7);
-    border-top: 2px solid #444;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -568,18 +545,6 @@ body {
     cursor: not-allowed;
 }
 
-#btn-usar-pocao {
-    background: #2e7d32;
-    color: white;
-    border: 1px solid #4caf50;
-}
-
-#btn-encerrar-turno {
-    background: #b71c1c;
-    color: white;
-    border: 1px solid var(--accent);
-}
-
 .combate-mensagem {
     position: absolute;
     bottom: 50%;
@@ -642,11 +607,6 @@ body {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-.loja-item.selecionado {
-    border-color: var(--accent);
-    background: #1a2a4a;
 }
 
 .loja-item.caro {
@@ -831,59 +791,6 @@ body {
     image-rendering: crisp-edges;
 }
 
-/* --- Cenário da Base --- */
-.base-cenario {
-    position: relative;
-    width: 800px;
-    height: 500px;
-    background-image: url('/base/base.png'); /* Crie ou pegue uma imagem de fundo */
-    background-size: cover;
-    background-position: center;
-    border: 2px solid var(--accent);
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.predio-slot {
-    position: absolute;
-    cursor: pointer;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.predio-slot:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 10px var(--accent2));
-}
-
-.predio-slot img {
-    width: 300px; /* Ajuste para o tamanho das suas artes */
-    height: 300px;
-    object-fit: contain;
-}
-
-/* Estado padrão do nome (invisível) */
-.predio-nome {
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    margin-top: 5px;
-    pointer-events: none; /* Mantém isso para não bugar o clique */
-    
-    /* Novas regras: Invisível com transição suave */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease-in-out, visibility 0.2s;
-}
-
-/* O Segredo: Quando passar o mouse no slot, o nome dentro dele aparece */
-.predio-slot:hover .predio-nome {
-    opacity: 1;
-    visibility: visible;
-}
-
 /* --- Modals / Popups Manuais --- */
 .modal-overlay {
     position: absolute;
@@ -906,66 +813,23 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* Adicionamos o .base-forte antes para garantir que esta regra vença a regra global */
-.base-forte .btn-fechar-popup {
-    position: absolute;
-    top: 10px; right: 10px;
-    background: var(--danger);
-    color: white;
-    
-    /* Anulações das regras globais do .base-forte button */
-    border: none;
-    min-width: 0; 
-    padding: 0;   
-    
-    /* Formato da bolinha */
-    border-radius: 50%;
-    width: 28px; 
-    height: 28px;
-    
-    /* Centralização perfeita do texto */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    font-size: 1rem;
-    font-weight: bold;
-    line-height: 1; /* Garante que o X não fique deslocado pra baixo */
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.base-forte .btn-fechar-popup:hover {
-    background: #d32f2f; 
-    transform: scale(1.1);
-}
-
-
 /* Opcional: remover o outline padrão do browser */
 button:focus { outline: none; }
 
+.loja-item.selecionado,
 .menu-selecionado {
-
-    outline: 3px solid #ffd700;
-
+    outline: 3px solid #c9c9c9;
     outline-offset: 4px;
-
 }
 
-
 /* Destaque para navegação por teclado */
-button.selecionado, 
-.predio-slot.selecionado {
+button.selecionado {
     outline: 3px solid var(--accent2);
     transform: scale(1.05);
     filter: brightness(1.2);
 }
-.predio-slot.menu-selecionado,
 button.menu-selecionado,
 select.menu-selecionado {
-
-    outline: 3px solid gold;
-
+    outline: 3px solid #c9c9c9;
     outline-offset: 4px;
-
 }
