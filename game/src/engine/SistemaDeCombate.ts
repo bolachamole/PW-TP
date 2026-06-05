@@ -14,6 +14,12 @@ export class SistemaDeCombate {
     public turnoContador: number = 0;
     public mensagem: string = '';
 
+    // Estado de seleção de alvo
+    public selecionandoAlvo: boolean = false;
+    public alvosVisiveis: Entidade[] = [];
+    public indiceAlvoSelecionado: number = 0;
+    private indiceHabilidadeAlvo: number = -1;
+
     // Ponteiros de comunicação com a Interface Gráfica (UI)
     private onAtualizarVisor: () => void = () => {};
     private onEncerrarVisor: () => void = () => {};
@@ -25,7 +31,8 @@ export class SistemaDeCombate {
         this.acaoRealizada = false;
         this.turnoContador = 0;
         this.mensagem = 'A batalha começou!';
-        
+        this.selecionandoAlvo = false;
+
         this.onAtualizarVisor = onAtualizar;
         this.onEncerrarVisor = onEncerrar;
 
@@ -46,7 +53,7 @@ export class SistemaDeCombate {
                 y = Math.floor(Math.random() * ALTURA_CAMPO);
                 chave = `${x},${y}`;
             } while (posicoesOcupadas.has(chave));
-            
+
             posicoesOcupadas.add(chave);
             inimigo.x = x;
             inimigo.y = y;
@@ -80,8 +87,19 @@ export class SistemaDeCombate {
         }
     }
 
+    // =========================================================================
+    // SISTEMA DE SELEÇÃO DE ALVO
+    // =========================================================================
+
     public usarHabilidade(idx: number): void {
         if (this.turno !== 'jogador' || !jogo.jogador.vivo) return;
+
+        if (this.selecionandoAlvo) {
+            if (idx === this.indiceHabilidadeAlvo) {
+                this.confirmarAlvo();
+            }
+            return;
+        }
 
         if (this.acaoRealizada) {
             this.mensagem = "Já realizastes uma ação neste turno! Pressiona R para encerrar.";
@@ -97,6 +115,68 @@ export class SistemaDeCombate {
             this.onAtualizarVisor();
             return;
         }
+
+        // Habilidades autodirigidas executam imediatamente
+        if (hab.tipo === 'cura' || hab.tipo === 'defesa') {
+            this.executarHabilidade(idx);
+            return;
+        }
+
+        // Habilidades de ataque entram em modo de seleção de alvo
+        const teclaHab = ['A', 'S', 'D', 'F', 'G'][idx] ?? '?';
+        this.alvosVisiveis = this.inimigos.filter(e => e.vivo &&
+            distanciaEntre({ x: jogo.jogador.x, y: jogo.jogador.y }, { x: e.x, y: e.y }) <= hab.alcance
+        );
+
+        if (this.alvosVisiveis.length === 0) {
+            this.mensagem = "Nenhum inimigo ao alcance!";
+            this.onAtualizarVisor();
+            return;
+        }
+
+        this.selecionandoAlvo = true;
+        this.indiceHabilidadeAlvo = idx;
+        this.indiceAlvoSelecionado = 0;
+        this.mensagem = `Alvo: ${this.alvosVisiveis[0].nome} | Tab: ciclar | R/${teclaHab}: confirmar | E: cancelar`;
+        this.onAtualizarVisor();
+    }
+
+    public proximoAlvo(): void {
+        if (!this.selecionandoAlvo || this.alvosVisiveis.length === 0) return;
+        this.indiceAlvoSelecionado = (this.indiceAlvoSelecionado + 1) % this.alvosVisiveis.length;
+        this.mensagem = `Alvo: ${this.alvosVisiveis[this.indiceAlvoSelecionado].nome}`;
+        this.onAtualizarVisor();
+    }
+
+    public alvoAnterior(): void {
+        if (!this.selecionandoAlvo || this.alvosVisiveis.length === 0) return;
+        this.indiceAlvoSelecionado = (this.indiceAlvoSelecionado - 1 + this.alvosVisiveis.length) % this.alvosVisiveis.length;
+        this.mensagem = `Alvo: ${this.alvosVisiveis[this.indiceAlvoSelecionado].nome}`;
+        this.onAtualizarVisor();
+    }
+
+    public confirmarAlvo(): void {
+        if (!this.selecionandoAlvo) return;
+        this.selecionandoAlvo = false;
+        this.executarHabilidade(this.indiceHabilidadeAlvo);
+    }
+
+    public cancelarSelecaoAlvo(): void {
+        if (!this.selecionandoAlvo) return;
+        this.selecionandoAlvo = false;
+        this.indiceHabilidadeAlvo = -1;
+        this.alvosVisiveis = [];
+        this.mensagem = "Ação cancelada.";
+        this.onAtualizarVisor();
+    }
+
+    // =========================================================================
+    // EXECUÇÃO DE HABILIDADES
+    // =========================================================================
+
+    private executarHabilidade(idx: number): void {
+        const hab = jogo.jogador.habilidades[idx];
+        if (!hab) return;
 
         // Consome MP
         jogo.jogador.mp -= hab.custoMP;
@@ -116,34 +196,37 @@ export class SistemaDeCombate {
             return;
         }
 
-        if (hab.tipo === 'ataque' || hab.tipo === 'ataquearea') {
-            const inimigosVivos = this.inimigos.filter(e => e.vivo);
-            if (inimigosVivos.length === 0) return;
-
-            if (hab.tipo === 'ataquearea') {
-                for (const ini of inimigosVivos) {
-                    const dano = Math.floor((jogo.jogador.atk * 1.5));
-                    ini.receberDano(dano);
-                }
-                hab.som?.play()
-                this.mensagem = `${hab.nome}! Causou dano em todos os inimigos!`;
-            } else {
-                const alvoMaisPerto = inimigosVivos.reduce((a, b) =>
-                    distanciaEntre({ x: jogo.jogador.x, y: jogo.jogador.y }, { x: a.x, y: a.y }) <
-                    distanciaEntre({ x: jogo.jogador.x, y: jogo.jogador.y }, { x: b.x, y: b.y }) ? a : b
-                );
-                const mult = hab.nome === "Golpe Forte" ? 2 : 1;
-                const dano = Math.floor((jogo.jogador.atk * mult));
-                hab.som?.play()
-                alvoMaisPerto.receberDano(dano);
-                
-                if (!alvoMaisPerto.vivo) {
-                    this.mensagem = `${hab.nome}! ${alvoMaisPerto.nome} derrotado!`;
-                } else {
-                    this.mensagem = `${hab.nome}! Causou ${dano} de dano a ${alvoMaisPerto.nome}.`;
-                }
+        if (hab.tipo === 'ataquearea') {
+            const alvos = this.inimigos.filter(e => e.vivo &&
+                distanciaEntre({ x: jogo.jogador.x, y: jogo.jogador.y }, { x: e.x, y: e.y }) <= hab.alcance
+            );
+            for (const ini of alvos) {
+                const dano = Math.floor((jogo.jogador.atk * 1.5));
+                ini.receberDano(dano);
             }
+            hab.som?.play()
+            this.mensagem = `${hab.nome}! Causou dano em todos os inimigos ao alcance!`;
+            this.finalizarAcao();
+            return;
+        }
 
+        if (hab.tipo === 'ataque') {
+            const alvo = this.alvosVisiveis[this.indiceAlvoSelecionado]
+                ?? this.inimigos.filter(e => e.vivo
+                    && distanciaEntre({ x: jogo.jogador.x, y: jogo.jogador.y }, { x: e.x, y: e.y }) <= hab.alcance
+                )[0];
+            if (!alvo) return;
+
+            const mult = hab.nome === "Golpe Forte" ? 2 : 1;
+            const dano = Math.floor((jogo.jogador.atk * mult));
+            hab.som?.play()
+            alvo.receberDano(dano);
+
+            if (!alvo.vivo) {
+                this.mensagem = `${hab.nome}! ${alvo.nome} derrotado!`;
+            } else {
+                this.mensagem = `${hab.nome}! Causou ${dano} de dano a ${alvo.nome}.`;
+            }
             this.finalizarAcao();
             return;
         }
@@ -166,12 +249,19 @@ export class SistemaDeCombate {
 
     private finalizarAcao(): void {
         this.acaoRealizada = true;
+        this.alvosVisiveis = [];
         this.verificarFimCombate();
         this.onAtualizarVisor();
     }
 
     public encerrarTurnoJogador(): void {
         if (this.turno === 'inimigos') return;
+
+        if (this.selecionandoAlvo) {
+            this.cancelarSelecaoAlvo();
+            return;
+        }
+
         if (this.acaoRealizada || this.passosRestantes < 10) {
             this.iniciarTurnoInimigos();
         } else {
@@ -182,15 +272,15 @@ export class SistemaDeCombate {
 
     private iniciarTurnoInimigos(): void {
         this.turno = 'inimigos';
-        jogo.jogador.defesaBonus = 0; 
+        jogo.jogador.defesaBonus = 0;
         this.onAtualizarVisor();
 
         setTimeout(() => {
-            
+
             // Delegação absoluta para o novo módulo de Inteligência Artificial
             MotorIA.processarTurno(this.inimigos, jogo.jogador, (msg) => {
                 // Guarda o registo do ataque para o ecrã desenhar
-                this.mensagem = msg; 
+                this.mensagem = msg;
             });
 
             this.turno = 'jogador';
@@ -200,13 +290,13 @@ export class SistemaDeCombate {
 
             this.verificarFimCombate();
             this.onAtualizarVisor();
-            
+
         }, 500);
     }
 
     private verificarFimCombate(): void {
         const inimigosVivos = this.inimigos.filter(e => e.vivo);
-        
+
         if (inimigosVivos.length === 0) {
             const xpGanho = this.inimigos.length * 15 + this.turnoContador * 5;
             jogo.jogador.ganharXP(xpGanho);

@@ -24,9 +24,17 @@ export class CombateGrelha {
             for (let x = 0; x < LARGURA_CAMPO; x++) {
                 const cell = document.createElement('div');
                 cell.className = 'combate-cell';
-                
+
                 // Delegação de eventos: O listener é anexado estaticamente à célula
                 cell.addEventListener('click', () => {
+                    if (motor.selecionandoAlvo) {
+                        const alvoAqui = motor.alvosVisiveis.find(e => e.x === x && e.y === y);
+                        if (alvoAqui) {
+                            motor.indiceAlvoSelecionado = motor.alvosVisiveis.indexOf(alvoAqui);
+                            motor.confirmarAlvo();
+                        }
+                        return;
+                    }
                     motor.tentarMoverJogadorParaGrelha(x, y);
                 });
 
@@ -34,7 +42,7 @@ export class CombateGrelha {
                 this.celulas[y][x] = cell;
             }
         }
-        
+
         pai.appendChild(this.container);
     }
 
@@ -48,7 +56,7 @@ export class CombateGrelha {
         for (let y = 0; y < ALTURA_CAMPO; y++) {
             for (let x = 0; x < LARGURA_CAMPO; x++) {
                 this.celulas[y][x].className = 'combate-cell';
-                this.celulas[y][x].innerHTML = ''; 
+                this.celulas[y][x].innerHTML = '';
             }
         }
 
@@ -66,13 +74,27 @@ export class CombateGrelha {
             cellInimigo.innerHTML = `<img src="${spriteEnemy(inimigo.nome)}" class="sprite-inimigo" alt="${inimigo.nome}">`;
         }
 
-        // 4. Calcula e desenha a área verde de movimento disponível
-        if (motor.turno === 'jogador' && motor.passosRestantes > 0) {
+        // 4. Destaques de seleção de alvo
+        if (motor.selecionandoAlvo) {
+            for (const inimigo of motor.alvosVisiveis) {
+                const cell = this.celulas[inimigo.y][inimigo.x];
+                cell.classList.add('alvo-possivel');
+            }
+
+            const alvoSelecionado = motor.alvosVisiveis[motor.indiceAlvoSelecionado];
+            if (alvoSelecionado) {
+                const cell = this.celulas[alvoSelecionado.y][alvoSelecionado.x];
+                cell.classList.add('alvo-selecionado');
+            }
+        }
+
+        // 5. Calcula e desenha a área verde de movimento disponível
+        if (motor.turno === 'jogador' && motor.passosRestantes > 0 && !motor.selecionandoAlvo) {
             for (let y = 0; y < ALTURA_CAMPO; y++) {
                 for (let x = 0; x < LARGURA_CAMPO; x++) {
                     const dist = distanciaEntre({ x: jogador.x, y: jogador.y }, { x, y });
                     const cell = this.celulas[y][x];
-                    
+
                     if (dist <= motor.passosRestantes && dist > 0 && cell.innerHTML === '') {
                         cell.classList.add('movevel');
                     }

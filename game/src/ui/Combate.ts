@@ -10,7 +10,7 @@ import { CombateAcoes } from "./CombateAcoes.js";
 export class Combate {
     private elementoDOM: HTMLDivElement | null = null;
     private listenerTeclado: ((e: KeyboardEvent) => void) | null = null;
-    
+
     // Motor de Regras
     private motor = new SistemaDeCombate();
 
@@ -30,7 +30,7 @@ export class Combate {
         // O Motor inicia e avisa a classe mãe para re-pintar os filhos
         this.motor.iniciar(
             inimigos,
-            () => this.atualizarVisor(), 
+            () => this.atualizarVisor(),
             () => this.fechar()
         );
 
@@ -56,6 +56,34 @@ export class Combate {
         this.removerListeners();
         this.listenerTeclado = (e: KeyboardEvent) => {
             if (this.motor.turno !== 'jogador' || !jogo.jogador.vivo) return;
+
+            // Atalhos durante a seleção de alvo
+            if (this.motor.selecionandoAlvo) {
+                switch (e.key) {
+                    case 'Tab':
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            this.motor.alvoAnterior();
+                        } else {
+                            this.motor.proximoAlvo();
+                        }
+                        break;
+                    case 'r': case 'R':
+                        e.preventDefault();
+                        this.motor.confirmarAlvo();
+                        break;
+                    case 'e': case 'E':
+                        e.preventDefault();
+                        this.motor.cancelarSelecaoAlvo();
+                        break;
+                    case 'a': case 'A': this.motor.usarHabilidade(0); break;
+                    case 's': case 'S': this.motor.usarHabilidade(1); break;
+                    case 'd': case 'D': this.motor.usarHabilidade(2); break;
+                    case 'f': case 'F': this.motor.usarHabilidade(3); break;
+                    case 'g': case 'G': this.motor.usarHabilidade(4); break;
+                }
+                return;
+            }
 
             switch (e.key) {
                 case 'ArrowUp': e.preventDefault(); this.motor.tentarMoverJogador(0, -1); break;

@@ -462,6 +462,42 @@ body {
     cursor: pointer;
 }
 
+.combate-cell.alvo-possivel {
+    background: #5a2a3a;
+    box-shadow: 0 0 12px rgba(233, 69, 96, 0.5);
+    cursor: pointer;
+}
+
+.combate-cell.alvo-selecionado {
+    background: #8a1a2a;
+    box-shadow: 0 0 20px rgba(233, 69, 96, 0.8), inset 0 0 15px rgba(255, 200, 0, 0.3);
+    cursor: pointer;
+    transform: scale(1.05);
+    z-index: 5;
+    position: relative;
+}
+
+.combate-alvo-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 8px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 6px;
+}
+
+.combate-alvo-nome {
+    font-weight: bold;
+    color: var(--accent2);
+    font-size: 1em;
+}
+
+.combate-alvo-hp {
+    color: var(--hp-color);
+    font-size: 0.85em;
+}
+
 .combate-acoes {
     padding: 6px 12px;
     background: rgba(0,0,0,0.7);
