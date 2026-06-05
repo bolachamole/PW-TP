@@ -1,3 +1,971 @@
-#grid {
-    quadrado: 50px
+:root {
+    --bg-primary: #0f3b3a;
+    --bg-secondary: rgba(5,20,20,0.95);
+    --bg-card: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px);
+    --accent: rgba(5,20,20,0.95);
+    --accent2: #f5c842;
+    --text-primary: #69A9B9;
+    --text-secondary: #aaa;
+    --hp-color: #e94560;
+    --mp-color: #4fc3f7;
+    --xp-color: #f5c842;
+    --success: #4caf50;
+    --danger: #f44336;
+    --game-width: 800px;
+    --game-height: 600px;
+
+}
+
+/* Garante que qualquer tela de jogo tenha tamanho fixo e seja centralizada */
+.menu-screen,
+.tela-mundo, 
+.tela-combate, 
+.tela-loja, 
+.tela-evento, 
+.tela-derrota, 
+.tela-vitoria {
+    width: var(--game-width);
+    height: var(--game-height);
+    position: relative; /* Necessário para que elementos absolutos (como popups) fiquem presos à janela */
+    overflow: hidden;   /* Impede que elementos passem das bordas */
+    border: 2px solid var(--accent2); /* Mantém a moldura do jogo */
+    background-color: var(--bg-primary); /* Garante que o fundo não fique transparente */
+}
+
+/* Ajuste específico para o Menu para centralizar os botões */
+.menu-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Menu Principal */
+.menu-screen, .base-forte {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    text-align: center;
+}
+
+.menu-screen h1, .base-forte h1 {
+    font-size: 3em;
+    color: var(--accent2);
+    text-shadow: 0 0 20px rgba(245, 200, 66, 0.5);
+    margin-bottom: 20px;
+}
+
+.menu-screen button, .base-forte button {
+    font-family: inherit;
+    font-size: 1.2em;
+    padding: 12px 40px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 2px solid var(--accent2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 200px;
+}
+
+.menu-screen button:hover, .base-forte button:hover {
+    background: var(--accent2);
+    color: var(--bg-primary);
+}
+
+/* Settings */
+.audio-control {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.audio-control label {
+    font-size: 1.1em;
+}
+
+.audio-control input[type="range"] {
+    width: 200px;
+}
+
+/* Mundo (Overworld Graph) */
+.tela-mundo {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    position: relative;
+}
+
+.mundo-info {
+    display: flex;
+    gap: 30px;
+    padding: 15px 20px;
+    background: var(--bg-card);
+    font-size: 1.1em;
+    z-index: 10;
+}
+
+.mundo-grafo {
+    flex: 1;
+    position: relative;
+    overflow: visible;
+    min-height: 400px;
+    padding: 10px 0;
+}
+
+.mundo-no {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    position: relative;
+}
+
+.mundo-no.bloqueado {
+    background: #333;
+    border: 2px solid #555;
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.mundo-no.disponivel {
+    background: var(--bg-card);
+    border: 2px solid var(--accent2);
+}
+
+.mundo-no.visitado {
+    background: #2a3a5e;
+    border: 2px solid var(--text-secondary);
+    opacity: 0.6;
+}
+
+.mundo-no-x {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    font-weight: bold;
+    line-height: 1;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.mundo-no-cadeado {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 1em;
+    z-index: 10;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+.mundo-no.selecionado {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.mundo-no.atual {
+    border-color: #4fc3f7;
+    box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
+}
+
+.mundo-no-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.mundo-no-tipo {
+    font-size: 0.6em;
+    margin-top: 2px;
+    color: var(--text-secondary);
+}
+
+.mundo-lista-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 180px;
+    max-width: 260px;
+    z-index: 15;
+}
+
+.mundo-lista-titulo {
+    font-size: 0.75em;
+    color: var(--accent2);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mundo-lista-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.mundo-lista-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.mundo-lista-item.ativo {
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    outline: none;
+}
+
+.mundo-lista-item .sprite-no {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.mundo-lista-icone {
+    display: flex;
+    align-items: center;
+    width: 26px;
+    height: 26px;
+}
+
+.mundo-lista-nome {
+    flex: 1;
+    font-size: 0.8em;
+    color: var(--text-primary);
+}
+
+.mundo-lista-seta {
+    font-size: 0.8em;
+    color: var(--accent2);
+}
+
+.mundo-lista-vazio {
+    font-size: 0.75em;
+    color: var(--text-secondary);
+    padding: 5px 8px;
+    font-style: italic;
+}
+
+.mundo-acoes {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: var(--bg-card);
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--accent2);
+    text-align: center;
+    z-index: 10;
+}
+
+/* Combate */
+.tela-combate {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #2a1a1a;
+    position: relative;
+    overflow: hidden;
+}
+
+.combate-hud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 16px;
+    gap: 8px;
+    background: rgba(0,0,0,0.5);
+    border-bottom: 2px solid #444;
+    flex-shrink: 0;
+    max-height: 30vh;
+    overflow-y: auto;
+}
+
+.combate-hud-jogador {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.combate-nome {
+    font-weight: bold;
+    color: var(--accent2);
+    margin-bottom: 3px;
+    font-size: 0.95em;
+}
+
+.barra-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.barra-rotulo {
+    font-size: 0.65em;
+    font-weight: bold;
+    min-width: 22px;
+}
+
+.barra-fundo {
+    width: 120px;
+    height: 12px;
+    background: #333;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.barra-fundo.pequeno {
+    width: 50px;
+    height: 8px;
+}
+
+.barra-preenchimento {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s;
+}
+
+.barra-preenchimento.hp {
+    background: linear-gradient(90deg, #e94560, #ff6b81);
+}
+
+.barra-preenchimento.mp {
+    background: linear-gradient(90deg, #4fc3f7, #81d4fa);
+}
+
+.barra-texto {
+    font-size: 0.75em;
+    min-width: 50px;
+}
+
+.combate-pocoes {
+    font-size: 0.85em;
+    color: var(--xp-color);
+}
+
+.combate-inimigos-hud {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    max-height: 20vh;
+    overflow-y: auto;
+    justify-content: flex-end;
+}
+
+.combate-hud-inimigo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.75em;
+}
+
+.combate-campo {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--largura, 12), 1fr);
+    grid-template-rows: repeat(var(--altura, 6), 1fr);
+    gap: 1px;
+    padding: 6px;
+    background: #2d1f1f;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.combate-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #3d2a2a;
+    border-radius: 3px;
+    font-size: clamp(0.7em, 2.5vw, 1.3em);
+    min-height: 30px;
+    transition: background 0.2s;
+}
+
+.combate-cell.jogador {
+    background: #2a4a2a;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.combate-cell.inimigo {
+    background: #4a2a2a;
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+}
+
+.combate-cell.movevel {
+    background: #3a4a3a;
+    cursor: pointer;
+}
+
+.combate-cell.alvo-possivel {
+    background: #5a2a3a;
+    box-shadow: 0 0 12px rgba(233, 69, 96, 0.5);
+    cursor: pointer;
+}
+
+.combate-cell.alvo-selecionado {
+    background: #8a1a2a;
+    box-shadow: 0 0 20px rgba(233, 69, 96, 0.8), inset 0 0 15px rgba(255, 200, 0, 0.3);
+    cursor: pointer;
+    transform: scale(1.05);
+    z-index: 5;
+    position: relative;
+}
+
+.combate-alvo-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 8px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 6px;
+}
+
+.combate-alvo-nome {
+    font-weight: bold;
+    color: var(--accent2);
+    font-size: 1em;
+}
+
+.combate-alvo-hp {
+    color: var(--hp-color);
+    font-size: 0.85em;
+}
+
+.combate-acoes {
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.7);
+    border-top: 2px solid #444;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+    max-height: 25vh;
+    overflow-y: auto;
+}
+
+.combate-turno-info {
+    font-size: 0.85em;
+    color: var(--accent2);
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.combate-habilidades {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hab-btn {
+    font-family: inherit;
+    padding: 5px 10px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--text-secondary);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.75em;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.hab-btn:hover {
+    background: var(--accent2);
+    color: var(--bg-primary);
+}
+
+.hab-btn.sem-mp {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.combate-botoes {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.combate-botoes button {
+    font-family: inherit;
+    padding: 6px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: all 0.2s;
+}
+
+.combate-botoes button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#btn-usar-pocao {
+    background: #2e7d32;
+    color: white;
+    border: 1px solid #4caf50;
+}
+
+#btn-encerrar-turno {
+    background: #b71c1c;
+    color: white;
+    border: 1px solid var(--accent);
+}
+
+.combate-mensagem {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    background: rgba(0,0,0,0.85);
+    color: var(--accent2);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    border: 1px solid var(--accent2);
+    animation: fadeIn 0.3s;
+    z-index: 20;
+    max-width: 80%;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Loja */
+.tela-loja {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background: var(--bg-primary);
+    gap: 20px;
+}
+
+.tela-loja h1 {
+    color: var(--accent2);
+    font-size: 2em;
+}
+
+.loja-xp {
+    font-size: 1.2em;
+    color: var(--xp-color);
+}
+
+.loja-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.loja-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--bg-card);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.loja-item.selecionado {
+    border-color: var(--accent);
+    background: #1a2a4a;
+}
+
+.loja-item.caro {
+    opacity: 0.5;
+}
+
+.loja-item-nome {
+    font-weight: bold;
+    color: var(--accent2);
+}
+
+.loja-item-desc {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+}
+
+.loja-item-preco {
+    color: var(--xp-color);
+    font-weight: bold;
+}
+
+.loja-status {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.loja-acoes {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+.loja-mensagem {
+    color: var(--accent2);
+    font-size: 1.1em;
+    padding: 10px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 6px;
+}
+
+/* Evento */
+.tela-evento {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+}
+
+.evento-card {
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent2);
+    border-radius: 12px;
+    max-width: 500px;
+}
+
+.evento-card h1 {
+    color: var(--accent2);
+    margin-bottom: 15px;
+}
+
+.evento-card p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.evento-btn {
+    font-family: inherit;
+    padding: 10px 30px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 2px solid var(--accent2);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: all 0.2s;
+}
+
+.evento-btn:hover {
+    background: var(--accent2);
+    color: var(--bg-primary);
+}
+
+.evento-resultado {
+    color: var(--accent2);
+    font-size: 1em;
+    margin-top: 15px;
+}
+
+.evento-sair {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+/* Derrota */
+.tela-derrota, .tela-vitoria {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+}
+
+.derrota-card, .vitoria-card {
+    text-align: center;
+    padding: 50px;
+    border-radius: 12px;
+    max-width: 500px;
+}
+
+.derrota-card {
+    background: #1a0a0a;
+    border: 2px solid var(--accent);
+}
+
+.vitoria-card {
+    background: #0a1a0a;
+    border: 2px solid var(--success);
+}
+
+.derrota-card h1 {
+    color: var(--accent);
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.vitoria-card h1 {
+    color: var(--accent2);
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.derrota-card p, .vitoria-card p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.derrota-card button, .vitoria-card button {
+    font-family: inherit;
+    padding: 12px 30px;
+    margin-top: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: all 0.2s;
+}
+
+.derrota-card button {
+    background: var(--accent);
+    color: white;
+    border: 1px solid var(--accent);
+}
+
+.vitoria-card button {
+    background: var(--success);
+    color: white;
+    border: 1px solid var(--success);
+}
+
+.derrota-card button:hover, .vitoria-card button:hover {
+    filter: brightness(1.2);
+}
+
+/* Sprite images */
+.sprite-personagem,
+.sprite-inimigo {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.sprite-no {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* --- Cenário da Base --- */
+.base-cenario {
+    position: relative;
+    width: 800px;
+    height: 500px;
+    background-image: url('/base/base.png'); /* Crie ou pegue uma imagem de fundo */
+    background-size: cover;
+    background-position: center;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.predio-slot {
+    position: absolute;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.predio-slot:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px var(--accent2));
+}
+
+.predio-slot img {
+    width: 300px; /* Ajuste para o tamanho das suas artes */
+    height: 300px;
+    object-fit: contain;
+}
+
+/* Estado padrão do nome (invisível) */
+.predio-nome {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-top: 5px;
+    pointer-events: none; /* Mantém isso para não bugar o clique */
+    
+    /* Novas regras: Invisível com transição suave */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s;
+}
+
+/* O Segredo: Quando passar o mouse no slot, o nome dentro dele aparece */
+.predio-slot:hover .predio-nome {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Modals / Popups Manuais --- */
+.modal-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-conteudo {
+    position: relative;
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+    padding: 30px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Adicionamos o .base-forte antes para garantir que esta regra vença a regra global */
+.base-forte .btn-fechar-popup {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: var(--danger);
+    color: white;
+    
+    /* Anulações das regras globais do .base-forte button */
+    border: none;
+    min-width: 0; 
+    padding: 0;   
+    
+    /* Formato da bolinha */
+    border-radius: 50%;
+    width: 28px; 
+    height: 28px;
+    
+    /* Centralização perfeita do texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1; /* Garante que o X não fique deslocado pra baixo */
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.base-forte .btn-fechar-popup:hover {
+    background: #d32f2f; 
+    transform: scale(1.1);
+}
+
+
+/* Opcional: remover o outline padrão do browser */
+button:focus { outline: none; }
+
+.menu-selecionado {
+
+    outline: 3px solid #ffd700;
+
+    outline-offset: 4px;
+
+}
+
+
+/* Destaque para navegação por teclado */
+button.selecionado, 
+.predio-slot.selecionado {
+    outline: 3px solid var(--accent2);
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+.predio-slot.menu-selecionado,
+button.menu-selecionado,
+select.menu-selecionado {
+
+    outline: 3px solid gold;
+
+    outline-offset: 4px;
+
 }

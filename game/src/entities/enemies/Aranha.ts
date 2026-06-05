@@ -1,8 +1,9 @@
+import { insetos, pewpew } from "../../constants.js";
 import { Entidade, type Habilidade } from "../Entidade.js";
 
 const habilidades: Habilidade[] = [
-    { nome: "Picada", descricao: "Picada venenosa", custoMP: 0, danoBase: 0, cura: 0, alcance: 1, tipo: 'ataque' },
-    { nome: "Teia", descricao: "Prende o alvo", custoMP: 3, danoBase: 0, cura: 0, alcance: 3, tipo: 'ataque' }
+    { nome: "Picada", descricao: "Picada venenosa", custoMP: 0, cura: 0, alcance: 1, tipo: 'ataque', som: insetos },
+    { nome: "Teia", descricao: "Prende o alvo", custoMP: 3, cura: 0, alcance: 3, tipo: 'ataque', som: pewpew }
 ];
 
 export function criarAranha(nivel: number): Entidade {

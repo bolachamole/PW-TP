@@ -1,11 +1,14 @@
+import { magia2 } from "../constants.js";
+
 export interface Habilidade {
     nome: string;
     descricao: string;
     custoMP: number;
-    danoBase: number;
     cura: number;
     alcance: number;
     tipo: 'ataque' | 'cura' | 'defesa' | 'ataquearea';
+    som: HTMLAudioElement | null;
+    multiplicador?: number;
 }
 
 export class Entidade {
@@ -22,6 +25,7 @@ export class Entidade {
     vivo: boolean;
     habilidades: Habilidade[];
     defesaBonus: number;
+    multiplicadorOuro: number = 1.0;
 
     constructor(nome: string, hp: number, mp: number, atk: number, defesa: number, habilidades: Habilidade[]) {
         this.nome = nome;
@@ -49,15 +53,22 @@ export class Entidade {
 
     curar(quantidade: number): void {
         this.hp = Math.min(this.hpMax, this.hp + quantidade);
+        magia2.play().catch(() => {});
     }
 
     usarHabilidade(habilidade: Habilidade): boolean {
         if (this.mp < habilidade.custoMP) return false;
+        if (habilidade.som) habilidade.som.play().catch(() => {});
         this.mp -= habilidade.custoMP;
         return true;
     }
 
     resetarDefesaBonus(): void {
         this.defesaBonus = 0;
+    }
+
+    tocarSomAtaque(): void {
+        const ataque = this.habilidades.find(h => h.tipo === 'ataque' || h.tipo === 'ataquearea');
+        ataque?.som?.play().catch(() => {});
     }
 }
