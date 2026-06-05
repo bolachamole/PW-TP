@@ -11,7 +11,7 @@ export const SPRITES = {
     boss: "../public/sprites/StarEyeEsper.png"
 }
 
-let pasta = "../public/sons/";
+let pasta = "/sons/";
 export const espada1 = new Audio(`${pasta}espada1.mp3`);
 export const espada2 = new Audio(`${pasta}espada2.mp3`);
 export const espada3 = new Audio(`${pasta}espada3.mp3`);

@@ -21,3 +21,8 @@ Efeitos sonoros:
 - [YouTube Audio Libray](https://www.youtube.com/audiolibrary)
 
 Sprites: [Caves of Qud](https://www.cavesofqud.com/)
+Ícones: [Raven Fantasy Icons](https://clockworkraven.itch.io/raven-fantasy-icons)
+
+# Bus
+
+- [ ] Tela de vítória não está mais aparecendo no final do jogo.

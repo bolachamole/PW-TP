@@ -1,5 +1,5 @@
-export type TipoNo = 'Base' | 'Combate' | 'Loja' | 'Evento' | 'Boss';
-export type StatusNo = 'bloqueado' | 'disponivel' | 'visitado';
+type TipoNo = 'Base' | 'Combate' | 'Loja' | 'Evento' | 'Boss';
+type StatusNo = 'bloqueado' | 'disponivel' | 'visitado';
 
 export interface NoGrafo {
 
@@ -26,6 +26,8 @@ export class GeradorDeGrafos {
         }
 
         for (let p = 0; p < profundidade; p++) {
+            
+            camadas[p] = [];
 
             if (p === 0) {
 
@@ -105,7 +107,7 @@ export class GeradorDeGrafos {
             noAtual.proximos.push(proximaCamada[passoBase].id);
 
             if (Math.random() > 0.4 && passoBase + 1 < proximaCamada.length) {
-    
+
                 noAtual.proximos.push(proximaCamada[passoBase + 1].id);
     
             }
@@ -140,6 +142,7 @@ export class GeradorDeGrafos {
         if (r < 0.85) return 'Evento';
     
         return 'Loja';
+
     }
 
 }
