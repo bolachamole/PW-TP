@@ -1,10 +1,10 @@
 :root {
-    --bg-primary: #1a1a2e;
-    --bg-secondary: #16213e;
-    --bg-card: #0f3460;
-    --accent: #e94560;
+    --bg-primary: #0f3b3a;
+    --bg-secondary: rgba(5,20,20,0.95);
+    --bg-card: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px);
+    --accent: #rgba(5,20,20,0.95);
     --accent2: #f5c842;
-    --text-primary: #eee;
+    --text-primary: #69A9B9;
     --text-secondary: #aaa;
     --hp-color: #e94560;
     --mp-color: #4fc3f7;
@@ -131,8 +131,7 @@ body {
     display: flex;
     gap: 30px;
     padding: 15px 20px;
-    background: var(--bg-secondary);
-    border-bottom: 2px solid var(--bg-card);
+    background: var(--bg-card);
     font-size: 1.1em;
     z-index: 10;
 }
@@ -237,8 +236,7 @@ body {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--bg-card);
+    background: var(--bg-card);
     border-radius: 8px;
     padding: 10px;
     min-width: 180px;
@@ -462,12 +460,6 @@ body {
 .combate-cell.movevel {
     background: #3a4a3a;
     cursor: pointer;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
 }
 
 .combate-acoes {
@@ -922,10 +914,6 @@ button:focus { outline: none; }
 
     outline-offset: 4px;
 
-    transform: scale(1.03);
-
-    transition: 0.15s;
-
 }
 
 
@@ -943,7 +931,5 @@ select.menu-selecionado {
     outline: 3px solid gold;
 
     outline-offset: 4px;
-
-    transform: scale(1.05);
 
 }

@@ -119,8 +119,8 @@ export class Jogo {
         console.log("[FSM] Limpando registros do localStorage para Novo Jogo...");
         
         // 1. Apaga fisicamente as chaves do navegador
-        localStorage.removeItem('caves_of_memory_save');
-        localStorage.removeItem('caves_of_memory_progresso');
+        localStorage.removeItem('caves_of_nodes_save');
+        localStorage.removeItem('caves_of_nodes_progresso');
 
         // 2. Força o reinício dos atributos do Singleton de Progresso Global
         import("./ProgressoGlobal.js").then(({ progressoGlobal }) => {

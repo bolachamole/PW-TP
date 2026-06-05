@@ -6,6 +6,6 @@ const habilidades: Habilidade[] = [
 ];
 
 export function criarCamaleao(nivel: number): Entidade {
-    const e = new Entidade("Largato", 20 + nivel * 8, 10, 8 + nivel * 2, 2, habilidades);
+    const e = new Entidade("Camaleão", 20 + nivel * 8, 10, 8 + nivel * 2, 2, habilidades);
     return e;
 }

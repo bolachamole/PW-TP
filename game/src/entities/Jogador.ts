@@ -3,6 +3,7 @@ import { progressoGlobal } from "../engine/ProgressoGlobal.js";
 import { BALANCAMENTO } from "../engine/Balancamento.js";
 import { COMPENDIO_HABILIDADES, TABELA_PROGRESSAO_HABILIDADES } from "./Habilidades.js";
 import { GerenciadorDeHabilidades } from "../engine/GerenciadorDeHabilidades.js";
+import { magia2 } from "../constants.js";
 
 export class Jogador extends Entidade {
     // Inicialização orientada a dados a partir do arquivo de Balanceamento
@@ -145,6 +146,7 @@ export class Jogador extends Entidade {
         
         // Cura parametrizada dinamicamente
         this.curar(Math.floor(this.hpMax * BALANCAMENTO.JOGADOR.EFICACIA_POCAO_HP));
+        magia2.play()
         return true;
     }
 

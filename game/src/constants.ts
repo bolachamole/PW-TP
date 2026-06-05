@@ -1,17 +1,21 @@
 export const SPRITES = {
-    player: "../public/sprites/PraetorianPrime.png",
-    formiga: "../public/sprites/Salthopper.png",
-    guardiao: "../public/sprites/Dog_cherub.png",
-    urso: "../public/sprites/Bear.png",
-    camaleao: "../public/sprites/Horned_chameleon.png",
-    aranha: "../public/sprites/Greater_voider.png",
-    passaro: "../public/sprites/White_esh.png",
-    mercenario: "../public/sprites/DreamTortoise.png",
-    vinha: "../public/sprites/Qudzu.png",
-    boss: "../public/sprites/StarEyeEsper.png"
+    player: "sprites/PraetorianPrime.png",
+    formiga: "sprites/Salthopper.png",
+    cao: "sprites/Dog_cherub.png",
+    urso: "sprites/Bear.png",
+    camaleao: "sprites/Horned_chameleon.png",
+    aranha: "sprites/Greater_voider.png",
+    passaro: "sprites/White_esh.png",
+    mercenario: "sprites/DreamTortoise.png",
+    vinha: "sprites/Qudzu.png",
+    boss: "sprites/StarEyeEsper.png",
+    base: "sprites/Ovw_joppa.png",
+    combate: "sprites/Lunge_skill.png",
+    loja: "sprites/Elder_irudad.png",
+    evento: "sprites/Chest.png" 
 }
 
-let pasta = "/sons/";
+let pasta = "sons/";
 export const espada1 = new Audio(`${pasta}espada1.mp3`);
 export const espada2 = new Audio(`${pasta}espada2.mp3`);
 export const espada3 = new Audio(`${pasta}espada3.mp3`);

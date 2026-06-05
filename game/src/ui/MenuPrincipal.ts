@@ -31,14 +31,17 @@ export class MenuPrincipal {
         if (!this.elementoDOM) return;
 
         // Verifica dinamicamente no localStorage se existe progresso anterior salvo
-        const temSaveAnterior = localStorage.getItem('caves_of_memory_save') !== null;
+        const temSaveAnterior = localStorage.getItem('caves_of_nodes_save') !== null;
 
         this.elementoDOM.innerHTML = `
-            <h1>Caves of Memory</h1>
+            <h1>Caves of Nodes</h1>
+            
+            <h3>Setas para navegar, R para selecionar<h3>
             
             ${temSaveAnterior ? `<button id="btn-continuar" style="background-color: var(--success); color: white;">Continuar Jogo</button>` : ''}
             
             <button id="btn-jogar">${temSaveAnterior ? 'Novo Jogo (Apagar Progresso)' : 'Novo Jogo'}</button>
+            <br></br>
             <button id="btn-configurar">Configurações</button>
         `;
 

@@ -2,7 +2,7 @@ type TipoPredio = 'cura' | 'treinamento' | 'habilidades';
 
 class ProgressoGlobal {
     
-    private readonly STORAGE_KEY = 'caves_of_memory_progresso';
+    private readonly STORAGE_KEY = 'caves_of_nodes_progresso';
     
     public ouro: number = 0;
     public nivelPredioCura: number = 0;

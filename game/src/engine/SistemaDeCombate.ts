@@ -84,7 +84,7 @@ export class SistemaDeCombate {
         if (this.turno !== 'jogador' || !jogo.jogador.vivo) return;
 
         if (this.acaoRealizada) {
-            this.mensagem = "Já realizaste uma ação neste turno! Pressiona R para encerrar.";
+            this.mensagem = "Já realizastes uma ação neste turno! Pressiona R para encerrar.";
             this.onAtualizarVisor();
             return;
         }
@@ -125,6 +125,7 @@ export class SistemaDeCombate {
                     const dano = Math.floor((jogo.jogador.atk * 1.5));
                     ini.receberDano(dano);
                 }
+                hab.som?.play()
                 this.mensagem = `${hab.nome}! Causou dano em todos os inimigos!`;
             } else {
                 const alvoMaisPerto = inimigosVivos.reduce((a, b) =>
@@ -133,6 +134,7 @@ export class SistemaDeCombate {
                 );
                 const mult = hab.nome === "Golpe Forte" ? 2 : 1;
                 const dano = Math.floor((jogo.jogador.atk * mult));
+                hab.som?.play()
                 alvoMaisPerto.receberDano(dano);
                 
                 if (!alvoMaisPerto.vivo) {
@@ -201,8 +203,6 @@ export class SistemaDeCombate {
             
         }, 500);
     }
-
-    // PODE APAGAR os antigos métodos moverInimigoAteJogador() e atacarInimigo() daqui!
 
     private verificarFimCombate(): void {
         const inimigosVivos = this.inimigos.filter(e => e.vivo);

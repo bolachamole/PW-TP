@@ -1,6 +1,7 @@
+import { SPRITES } from "../constants.js";
 import type { NoGrafo } from "../engine/GeradorDeGrafos.js";
 import { jogo } from "../engine/Jogo.js";
-import { spriteNode, SPRITES } from "./sprites.js";
+import { spriteNode } from "./Sprites.js";
 
 export class Mundo {
     private elementoDOM: HTMLDivElement | null = null;

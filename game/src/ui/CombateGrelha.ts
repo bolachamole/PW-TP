@@ -1,7 +1,8 @@
 import type { Jogador } from "../entities/Jogador.js";
 import type { SistemaDeCombate } from "../engine/SistemaDeCombate.js";
 import { LARGURA_CAMPO, ALTURA_CAMPO, distanciaEntre } from "../engine/GeradorDeCampo.js";
-import { spriteEnemy, SPRITES } from "./sprites.js";
+import { spriteEnemy } from "./Sprites.js";
+import { SPRITES } from "../constants.js";
 
 export class CombateGrelha {
     private container: HTMLDivElement | null = null;
