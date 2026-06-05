@@ -1,4 +1,5 @@
 import { Entidade, type Habilidade } from "./Entidade.js";
+import { BALANCAMENTO } from "../engine/Balancamento.js";
 import { criarCamaleao } from "./enemies/Camaleao.js";
 import { criarCaoDeCaca } from "./enemies/CaoDeCaca.js";
 import { criarUrso } from "./enemies/Urso.js";
@@ -14,17 +15,18 @@ type CriadorDeInimigo = (nivel: number) => Entidade;
 interface InimigoDef {
     criar: CriadorDeInimigo;
     nivelMin: number;
+    multOuro: number;
 }
 
 const INIMIGOS: InimigoDef[] = [
-    { criar: criarCamaleao, nivelMin: 1 },
-    { criar: criarCaoDeCaca, nivelMin: 1 },
-    { criar: criarVinha, nivelMin: 2 },
-    { criar: criarAranha, nivelMin: 2 },
-    { criar: criarPassaro, nivelMin: 3 },
-    { criar: criarLouvaDeus, nivelMin: 3 },
-    { criar: criarMercenario, nivelMin: 3 },
-    { criar: criarUrso, nivelMin: 4 },
+    { criar: criarCamaleao, nivelMin: 1, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_CAMALEAO },
+    { criar: criarCaoDeCaca, nivelMin: 1, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_CAODECACA },
+    { criar: criarVinha, nivelMin: 2, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_VINHA },
+    { criar: criarAranha, nivelMin: 2, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_ARANHA },
+    { criar: criarPassaro, nivelMin: 3, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_PASSARO },
+    { criar: criarLouvaDeus, nivelMin: 3, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_LOUVADEUS },
+    { criar: criarMercenario, nivelMin: 3, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_MERCENARIO },
+    { criar: criarUrso, nivelMin: 4, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_URSO },
 ];
 
 export function sortearInimigos(quantidade: number, nivel: number): Entidade[] {
@@ -33,7 +35,10 @@ export function sortearInimigos(quantidade: number, nivel: number): Entidade[] {
 
     for (let i = 0; i < quantidade; i++) {
         const def = disponiveis[Math.floor(Math.random() * disponiveis.length)];
-        inimigos.push(def.criar(nivel));
+        const monstro = def.criar(nivel);
+        
+        (monstro as any).multiplicadorOuro = def.multOuro;
+        inimigos.push(monstro);
     }
 
     return inimigos;
@@ -41,18 +46,21 @@ export function sortearInimigos(quantidade: number, nivel: number): Entidade[] {
 
 export function criarBoss(nivel: number): Entidade {
     const habilidadesBoss: Habilidade[] = [
-        { nome: "Garras Negras", descricao: "Ataque sombrio", custoMP: 0, cura: 0, alcance: 1, tipo: 'ataque', som: explosao1 },
-        { nome: "Purpurina Venenosa", descricao: "Ataque sombrio", custoMP: 3, cura: 0, alcance: 3, tipo: 'ataque', som: magia1 },
-        { nome: "Explosão", descricao: "Ataque em área", custoMP: 8, cura: 0, alcance: 5, tipo: 'ataquearea', som: explosao2 },
+        { nome: "Garras Negras", descricao: "Ataque sombrio", custoMP: 0, alcance: 1, tipo: 'ataque', som: explosao1, cura: 0 },
+        { nome: "Purpurina Venenosa", descricao: "Ataque sombrio", custoMP: 3, alcance: 3, tipo: 'ataque', som: magia1, cura: 0 },
+        { nome: "Explosão", descricao: "Ataque em área", custoMP: 8, alcance: 5, tipo: 'ataquearea', som: explosao2, cura: 0 },
     ];
 
     const boss = new Entidade(
         "Guardião do Abismo",
-        150 + nivel * 30,
+        BALANCAMENTO.BOSS.HP_BASE + nivel * BALANCAMENTO.BOSS.HP_ESCALA,
         30,
-        20 + nivel * 5,
-        6 + nivel,
+        BALANCAMENTO.BOSS.ATK_BASE + nivel * BALANCAMENTO.BOSS.ATK_ESCALA,
+        BALANCAMENTO.BOSS.DEF_BASE + nivel * BALANCAMENTO.BOSS.DEF_ESCALA,
         habilidadesBoss
     );
+
+    (boss as any).multiplicadorOuro = BALANCAMENTO.MONSTROS.MULT_OURO_BOSS;
+
     return boss;
 }

@@ -1,8 +1,8 @@
-import { bounce, corte1 } from "../../constants.js";
+import { bounce, corte } from "../../constants.js";
 import { Entidade, type Habilidade } from "../Entidade.js";
 
 const habilidades: Habilidade[] = [
-    { nome: "Corte", descricao: "Golpe rápido", custoMP: 0, cura: 0, alcance: 1, tipo: 'ataque', som: corte1 },
+    { nome: "Corte", descricao: "Golpe rápido", custoMP: 0, cura: 0, alcance: 1, tipo: 'ataque', som: corte },
     { nome: "Investida", descricao: "Avança e ataca", custoMP: 4, cura: 0, alcance: 3, tipo: 'ataque', som: bounce }
 ];
 

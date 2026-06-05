@@ -51,12 +51,12 @@ export class Entidade {
 
     curar(quantidade: number): void {
         this.hp = Math.min(this.hpMax, this.hp + quantidade);
-        magia2.play();
+        magia2.play().catch(() => {});
     }
 
     usarHabilidade(habilidade: Habilidade): boolean {
         if (this.mp < habilidade.custoMP) return false;
-        if (habilidade.som) habilidade.som.play();
+        if (habilidade.som) habilidade.som.play().catch(() => {});
         this.mp -= habilidade.custoMP;
         return true;
     }
