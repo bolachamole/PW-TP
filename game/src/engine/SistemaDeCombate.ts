@@ -1,7 +1,6 @@
 import { jogo } from "./Jogo.js";
 import type { Entidade } from "../entities/Entidade.js";
 import { LARGURA_CAMPO, ALTURA_CAMPO, distanciaEntre } from "./GeradorDeCampo.js";
-import { calcularOuroBaseCombate } from "./Balancamento.js";
 import { MotorIA } from "./MotorIA.js";
 
 export type Turno = 'jogador' | 'inimigos';
@@ -301,16 +300,6 @@ export class SistemaDeCombate {
         if (inimigosVivos.length === 0) {
             const xpGanho = this.inimigos.length * 15 + this.turnoContador * 5;
             jogo.jogador.ganharXP(xpGanho);
-
-            const ouroBaseGlobal = calcularOuroBaseCombate(jogo.jogador.mapaAtual);
-            let totalOuroGanho = 0;
-            for (const inimigo of this.inimigos) {
-                const multiplicadorMonstro = inimigo.multiplicadorOuro;
-                totalOuroGanho += Math.floor(ouroBaseGlobal * multiplicadorMonstro);
-            }
-
-            jogo.jogador.ganharOuro(totalOuroGanho);
-            console.log(`[Motor] Combate vencido! Ouro total recebido: ${totalOuroGanho}`);
 
             this.onEncerrarVisor();
             jogo.vitoriaCombate();

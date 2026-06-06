@@ -3,16 +3,23 @@ import { jogo } from "../engine/Jogo.js";
 export class Vitoria {
     private elementoDOM: HTMLDivElement | null = null;
     private listenerTeclado: ((e: KeyboardEvent) => void) | null = null;
+    private listenerTecladoTranca: ((e: KeyboardEvent) => void) | null = null;
+    private transicao = false;
+    private trancaTransicao = true;
 
     abrir(containerPai: HTMLElement): void {
+    
         if (document.getElementById('tela-vitoria')) return;
 
         this.elementoDOM = document.createElement('div');
         this.elementoDOM.id = 'tela-vitoria';
         this.elementoDOM.className = 'tela-vitoria';
+        this.transicao = false;
+        this.trancaTransicao = false;
         containerPai.appendChild(this.elementoDOM);
 
         this.renderizar();
+    
     }
 
     private renderizar(): void {
@@ -25,32 +32,53 @@ export class Vitoria {
                 <p>Mapas conclu&iacute;dos: <strong>${jogo.jogador.mapaAtual}</strong></p>
                 <p>N&iacute;vel final: <strong>${jogo.jogador.nivel}</strong></p>
                 <p>XP total: <strong>${jogo.jogador.xp}</strong></p>
-                <button id="btn-vitoria-menu">Voltar ao Menu (R)</button>
+                <button id="btn-vitoria-menu">Continuar (R)</button>
             </div>
         `;
+
+        this.listenerTecladoTranca = (e: KeyboardEvent) => {
+            if (e.repeat) return;
+            if (e.key === 'r' || e.key === 'R') {
+                this.trancaTransicao = true;
+            }
+        };
 
         this.listenerTeclado = (e: KeyboardEvent) => {
             if (e.repeat) return;
             if (e.key === 'r' || e.key === 'R') {
-                e.preventDefault();
-                this.voltarAoMenu();
+                if (this.trancaTransicao) {
+                    e.preventDefault();
+                    this.avancar();
+                }
             }
         };
+
         window.addEventListener('keyup', this.listenerTeclado);
+        window.addEventListener('keyup', this.listenerTecladoTranca);
 
         const btn = this.elementoDOM.querySelector<HTMLButtonElement>('#btn-vitoria-menu');
-        btn?.addEventListener('click', () => this.voltarAoMenu());
+        btn?.addEventListener('click', () => this.avancar());
+    
     }
 
-    private voltarAoMenu(): void {
+    private avancar(): void {
+        
+        if (this.transicao) return;
+        this.transicao = true;
+
         this.fechar();
-        setTimeout(() => jogo.iniciarMenu(), 0);
+        jogo.avancarProximoMapa();
+
     }
 
     fechar(): void {
         if (this.listenerTeclado) {
             window.removeEventListener('keyup', this.listenerTeclado);
             this.listenerTeclado = null;
+        }
+        if (this.listenerTecladoTranca) {
+            window.removeEventListener('keyup', this.listenerTecladoTranca);
+            this.listenerTecladoTranca = null;
         }
         if (this.elementoDOM) {
             this.elementoDOM.remove();

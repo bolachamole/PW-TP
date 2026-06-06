@@ -15,18 +15,17 @@ type CriadorDeInimigo = (nivel: number) => Entidade;
 interface InimigoDef {
     criar: CriadorDeInimigo;
     nivelMin: number;
-    multOuro: number;
 }
 
 const INIMIGOS: InimigoDef[] = [
-    { criar: criarCamaleao, nivelMin: 1, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_CAMALEAO },
-    { criar: criarCaoDeCaca, nivelMin: 1, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_CAODECACA },
-    { criar: criarVinha, nivelMin: 2, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_VINHA },
-    { criar: criarAranha, nivelMin: 2, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_ARANHA },
-    { criar: criarPassaro, nivelMin: 3, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_PASSARO },
-    { criar: criarLouvaDeus, nivelMin: 3, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_LOUVADEUS },
-    { criar: criarMercenario, nivelMin: 3, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_MERCENARIO },
-    { criar: criarUrso, nivelMin: 4, multOuro: BALANCAMENTO.MONSTROS.MULT_OURO_URSO },
+    { criar: criarCamaleao, nivelMin: 1},
+    { criar: criarCaoDeCaca, nivelMin: 1},
+    { criar: criarVinha, nivelMin: 2},
+    { criar: criarAranha, nivelMin: 2},
+    { criar: criarPassaro, nivelMin: 3},
+    { criar: criarLouvaDeus, nivelMin: 3},
+    { criar: criarMercenario, nivelMin: 3},
+    { criar: criarUrso, nivelMin: 4},
 ];
 
 export function sortearInimigos(quantidade: number, nivel: number): Entidade[] {
@@ -37,7 +36,6 @@ export function sortearInimigos(quantidade: number, nivel: number): Entidade[] {
         const def = disponiveis[Math.floor(Math.random() * disponiveis.length)];
         const monstro = def.criar(nivel);
         
-        monstro.multiplicadorOuro = def.multOuro;
         inimigos.push(monstro);
     }
 
@@ -59,8 +57,6 @@ export function criarBoss(nivel: number): Entidade {
         BALANCAMENTO.BOSS.DEF_BASE + nivel * BALANCAMENTO.BOSS.DEF_ESCALA,
         habilidadesBoss
     );
-
-    boss.multiplicadorOuro = BALANCAMENTO.MONSTROS.MULT_OURO_BOSS;
 
     return boss;
 }

@@ -25,7 +25,6 @@ export class Entidade {
     vivo: boolean;
     habilidades: Habilidade[];
     defesaBonus: number;
-    multiplicadorOuro: number = 1.0;
 
     constructor(nome: string, hp: number, mp: number, atk: number, defesa: number, habilidades: Habilidade[]) {
         this.nome = nome;

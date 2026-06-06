@@ -10,10 +10,12 @@ import { LojaState } from "./states/LojaState.js";
 import { EventoState } from "./states/EventoState.js";
 import { DerrotaState } from "./states/DerrotaState.js";
 import { VitoriaState } from "./states/VitoriaState.js";
+import { Vitoria } from "../ui/Vitoria.js";
 
 export class Jogo {
     public app: HTMLElement;
     public jogador: Jogador;
+    private tela_vitoria: Vitoria;
 
     // Registrador central de estados (mantém dados internos como o Grafo preservados)
     public estados = {
@@ -31,6 +33,7 @@ export class Jogo {
     constructor() {
         this.app = document.getElementById("app")!;
         this.jogador = new Jogador();
+        this.tela_vitoria = new Vitoria();
     }
 
     /**
@@ -86,21 +89,34 @@ export class Jogo {
         if (mundo.noAtualId) {
             const noBoss = mundo.grafoAtual[mundo.noAtualId];
             if (noBoss?.tipo === 'Boss') {
+                
                 console.log("[DEBUG] Boss derrotado! Gerando novo mapa mais difícil...");
-                this.jogador.aplicarHabilidadeTemporaria(null);
-                this.jogador.mapaAtual++;
-                this.jogador.resetarParaNovoMapa();
-                this.jogador.salvar();
-                mundo.profundidadeAtual = Math.min(10, mundo.profundidadeAtual + 1);
-                mundo.tamanhoCamadaAtual = Math.min(6, mundo.tamanhoCamadaAtual + 1);
-                mundo.gerarNovoMapa(this);
-                this.transicionarPara(mundo);
+                
+                this.transicionarPara(this.estados.vitoria);
+                this.tela_vitoria.abrir(this.app);
+                
                 return;
+
             }
         }
 
         this.jogador.aplicarCuraPosCombate();
         this.voltarParaMundo();
+    }
+
+    avancarProximoMapa(): void {
+        console.log("[DEBUG] Gerando próximo mapa...");
+        const mundo = this.estados.mundo;
+
+        this.jogador.mapaAtual++;
+        this.jogador.resetarParaNovoMapa();
+        this.jogador.salvar();
+        
+        mundo.profundidadeAtual = Math.min(10, mundo.profundidadeAtual + 1);
+        mundo.tamanhoCamadaAtual = Math.min(6, mundo.tamanhoCamadaAtual + 1);
+        mundo.gerarNovoMapa(this);
+        
+        this.transicionarPara(mundo);
     }
 
     derrota(): void {
@@ -124,16 +140,6 @@ export class Jogo {
         // 1. Apaga fisicamente as chaves do navegador
         localStorage.removeItem('caves_of_memory_save');
         localStorage.removeItem('caves_of_nodes_progresso');
-
-        // 2. Força o reinício dos atributos do Singleton de Progresso Global
-        import("./ProgressoGlobal.js").then(({ progressoGlobal }) => {
-            progressoGlobal.ouro = 0;
-            progressoGlobal.nivelPredioCura = 0;
-            progressoGlobal.nivelPredioTreinamento = 0;
-            progressoGlobal.nivelPredioHabilidades = 0;
-            progressoGlobal.habilidadeBonusProximaRun = null;
-            progressoGlobal.salvar();
-        });
 
         // 3. Re-instancia um jogador totalmente limpo com atributos iniciais de balanceamento
         import("../entities/Jogador.js").then(({ Jogador }) => {

@@ -12,18 +12,13 @@ export class Derrota {
         this.elementoDOM.className = 'tela-derrota';
         containerPai.appendChild(this.elementoDOM);
 
-        // Processa as penalidades de morte (Ouro e XP) antes de exibir a tela
         this.processarPenalidadesMorte();
         this.renderizar();
     }
 
     private processarPenalidadesMorte(): void {
         const jogador = jogo.jogador;
-        
-        // 1. Penalidade de Ouro: Perde 40% do ouro acumulado
-        const ouroPerdido = Math.floor(jogador.ouro * 0.40);
-        jogador.gastarOuro(ouroPerdido);
-        
+                
         // 2. Penalidade de XP: Perde 20% do XP atual acumulado no nível
         const xpPerdido = Math.floor(jogador.xp * 0.20);
         jogador.xp = Math.max(0, jogador.xp - xpPerdido);
@@ -32,14 +27,13 @@ export class Derrota {
         jogador.aplicarHabilidadeTemporaria(null);
         
         // Armazena temporariamente os valores perdidos para exibição na UI
-        (this as any).ouroPerdidoInfo = ouroPerdido;
         (this as any).xpPerdidoInfo = xpPerdido;
+    
     }
 
     private renderizar(): void {
         if (!this.elementoDOM) return;
 
-        const ouroPerdido = (this as any).ouroPerdidoInfo ?? 0;
         const xpPerdido = (this as any).xpPerdidoInfo ?? 0;
 
         this.elementoDOM.innerHTML = `
@@ -54,12 +48,10 @@ export class Derrota {
                     
                     <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
                     
-                    <p style="color: #ff4d4d; margin: 5px 0;">Ouro Perdido: <strong>-${ouroPerdido}</strong> 💰</p>
                     <p style="color: #ffaa4d; margin: 5px 0;">XP Perdido: <strong>-${xpPerdido}</strong> ✨</p>
                     
                     <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
                     
-                    <p style="color: #ffd700;">Ouro Restante: <strong>${jogo.jogador.ouro}</strong> 💰</p>
                 </div>
                 
                 <p class="ajuda-texto">O progresso do seu her&oacute;i foi preservado. Prepare-se para descer novamente.</p>

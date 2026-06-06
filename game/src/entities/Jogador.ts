@@ -1,5 +1,4 @@
 import { Entidade, type Habilidade } from "./Entidade.js";
-import { progressoGlobal } from "../engine/ProgressoGlobal.js";
 import { BALANCAMENTO } from "../engine/Balancamento.js";
 import { COMPENDIO_HABILIDADES, TABELA_PROGRESSAO_HABILIDADES } from "./Habilidades.js";
 import { GerenciadorDeHabilidades } from "../engine/GerenciadorDeHabilidades.js";
@@ -32,18 +31,6 @@ export class Jogador extends Entidade {
     // =========================================================================
     // PROPRIEDADES COMPUTADAS (PROXY DE META-PROGRESSÃO)
     // =========================================================================
-
-    public get ouro(): number { return progressoGlobal.ouro; }
-    public set ouro(quantidade: number) { progressoGlobal.ouro = quantidade; progressoGlobal.salvar(); }
-
-    public get nivelPredioCura(): number { return progressoGlobal.nivelPredioCura; }
-    public set nivelPredioCura(nivel: number) { progressoGlobal.nivelPredioCura = nivel; progressoGlobal.salvar(); }
-
-    public get nivelPredioTreinamento(): number { return progressoGlobal.nivelPredioTreinamento; }
-    public set nivelPredioTreinamento(nivel: number) { progressoGlobal.nivelPredioTreinamento = nivel; progressoGlobal.salvar(); }
-
-    public get nivelPredioHabilidades(): number { return progressoGlobal.nivelPredioHabilidades; }
-    public set nivelPredioHabilidades(nivel: number) { progressoGlobal.nivelPredioHabilidades = nivel; progressoGlobal.salvar(); }
 
     public get habilidadeTemporaria(): Habilidade | null { return this.GerenciadorDeHabilidades.habilidadeTemporaria; }
 
@@ -99,7 +86,7 @@ export class Jogador extends Entidade {
     // =========================================================================
 
     public ganharXP(quantidade: number): boolean {
-        const xpFinal = Math.floor(quantidade * progressoGlobal.getModificadorXP());
+        const xpFinal = quantidade;
         this.xp += xpFinal;
         
         if (this.xp >= this.xpParaProximoNivel) {
@@ -132,14 +119,6 @@ export class Jogador extends Entidade {
         }
     }
 
-    public ganharOuro(quantidade: number): void {
-        progressoGlobal.adicionarOuro(quantidade);
-    }
-
-    public gastarOuro(quantidade: number): boolean {
-        return progressoGlobal.gastarOuro(quantidade);
-    }
-
     public usarPocao(): boolean {
         if (this.pocoes <= 0) return false;
         this.pocoes--;
@@ -151,12 +130,11 @@ export class Jogador extends Entidade {
     }
 
     public aplicarCuraPosCombate(): void {
-        const modCura = progressoGlobal.getModificadorCuraPosCombate();
-        if (modCura > 0) {
-            const totalCura = Math.floor(this.hpMax * modCura);
-            this.curar(totalCura);
-            console.log(`[Efeito Passivo] Cura de acampamento ativada: +${totalCura} HP.`);
-        }
+
+        const totalCura = this.hpMax;
+        this.curar(totalCura);
+        console.log(`[Efeito Passivo] Cura de acampamento ativada: +${totalCura} HP.`);
+    
     }
 
     public resetarParaNovoMapa(): void {

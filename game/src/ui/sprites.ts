@@ -1,34 +1,18 @@
-const BASE = '/sprites/';
-
-export const SPRITES = {
-    player: `${BASE}PraetorianPrime.png`,
-    largato: `${BASE}80px-Salthopper.png`,
-    lobo: `${BASE}Dog_cherub.png`,
-    urso: `${BASE}80px-Bear.png`,
-    louvaDeus: `${BASE}80px-Horned_chameleon.png`,
-    aranha: `${BASE}80px-Greater_voider.png`,
-    passaro: `${BASE}80px-DreamTortoise.png`,
-    vinha: `${BASE}80px-Qudzu.png`,
-    boss: `${BASE}StarEyeEsper.png`,
-    base: `${BASE}PraetorianPrime.png`,
-    combate: `${BASE}80px-Salthopper.png`,
-    loja: `${BASE}80px-DreamTortoise.png`,
-    evento: `${BASE}80px-White_esh.png`,
-    bossNode: `${BASE}StarEyeEsper.png`,
-} as const;
+import { SPRITES } from "../constants.js";
 
 export function spriteEnemy(nome: string): string {
     const map: Record<string, string> = {
-        'Largato': SPRITES.largato,
-        'Lobo': SPRITES.lobo,
+        'Camaleão': SPRITES.camaleao,
+        'Cão de caça': SPRITES.cao,
         'Urso': SPRITES.urso,
-        'Louva Deus': SPRITES.louvaDeus,
+        'Formiga': SPRITES.formiga,
         'Aranha': SPRITES.aranha,
         'Pássaro': SPRITES.passaro,
         'Vinha Viva': SPRITES.vinha,
+        'Mercenário': SPRITES.mercenario,
         'Guardião do Abismo': SPRITES.boss,
     };
-    return map[nome] || SPRITES.lobo;
+    return map[nome] || SPRITES.cao;
 }
 
 export function spriteNode(tipo: string): string {
@@ -37,7 +21,7 @@ export function spriteNode(tipo: string): string {
         'Combate': SPRITES.combate,
         'Loja': SPRITES.loja,
         'Evento': SPRITES.evento,
-        'Boss': SPRITES.bossNode,
+        'Boss': SPRITES.boss,
     };
     return map[tipo] || SPRITES.evento;
 }

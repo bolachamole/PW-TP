@@ -16,12 +16,8 @@ export class MenuPrincipal {
         this.elementoDOM.className = 'menu-screen';
 
         this.elementoDOM.style.backgroundImage = `
-            linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), 
-            url('wallpapers/wallpaper_menu.png')
+            linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8))
         `;
-        this.elementoDOM.style.backgroundSize = "cover"; // Faz a imagem preencher a tela toda
-        this.elementoDOM.style.backgroundPosition = "center"; // Centraliza a arte
-        this.elementoDOM.style.backgroundRepeat = "no-repeat"; // Impede que a imagem se repita se a tela for muito grande
 
         containerPai.appendChild(this.elementoDOM);
         this.conteudoInicialMenuPrincipal();
@@ -39,7 +35,7 @@ export class MenuPrincipal {
             <h3>Setas para navegar, R para selecionar<h3>
             
             ${temSaveAnterior ? `<button id="btn-continuar" style="background-color: var(--success); color: white;">Continuar Jogo</button>` : ''}
-            
+            <br></br>
             <button id="btn-jogar">${temSaveAnterior ? 'Novo Jogo (Apagar Progresso)' : 'Novo Jogo'}</button>
             <br></br>
             <button id="btn-configurar">Configurações</button>
