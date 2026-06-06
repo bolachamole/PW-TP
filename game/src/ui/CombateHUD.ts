@@ -15,6 +15,7 @@ export class CombateHUD {
 
         const hpPercent = Math.max(0, (jogador.hp / jogador.hpMax) * 100);
         const mpPercent = Math.max(0, (jogador.mp / jogador.mpMax) * 100);
+        const xpPercent = Math.max(0, (jogador.xp / jogador.xpParaProximoNivel) * 100);
 
         this.container.innerHTML = `
             <div class="combate-hud-jogador">
@@ -28,6 +29,11 @@ export class CombateHUD {
                     <div class="barra-rotulo">MP</div>
                     <div class="barra-fundo"><div class="barra-preenchimento mp" style="width:${mpPercent}%"></div></div>
                     <span class="barra-texto">${jogador.mp}/${jogador.mpMax}</span>
+                </div>
+                <div class="barra-container">
+                    <div class="barra-rotulo">XP</div>
+                    <div class="barra-fundo"><div class="barra-preenchimento xp" style="width:${xpPercent}%"></div></div>
+                    <span class="barra-texto">${jogador.xp}/${jogador.xpParaProximoNivel}</span>
                 </div>
                 <div class="combate-pocoes">Poções: ${jogador.pocoes}</div>
             </div>

@@ -30,8 +30,7 @@ export class Vitoria {
                 <h1>&#x1F3C6; Vit&oacute;ria!</h1>
                 <p>John Ancestoor triunfou sobre o Guardi&atilde;o do Abismo!</p>
                 <p>Mapas conclu&iacute;dos: <strong>${jogo.jogador.mapaAtual}</strong></p>
-                <p>N&iacute;vel final: <strong>${jogo.jogador.nivel}</strong></p>
-                <p>XP total: <strong>${jogo.jogador.xp}</strong></p>
+                <p>N&iacute;vel atual: <strong>${jogo.jogador.nivel}</strong></p>
                 <button id="btn-vitoria-menu">Continuar (R)</button>
             </div>
         `;

@@ -390,6 +390,10 @@ body {
     background: linear-gradient(90deg, #4fc3f7, #81d4fa);
 }
 
+.barra-preenchimento.xp {
+    background: linear-gradient(90deg, #d8de92, #d5d800);
+}
+
 .barra-texto {
     font-size: 0.75em;
     min-width: 50px;
