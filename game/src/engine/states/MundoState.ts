@@ -14,6 +14,7 @@ export class MundoState implements Estado {
     public profundidadeAtual: number = 4;
     public tamanhoCamadaAtual: number = 4;
     public noAtualId: string | null = null;
+    public mapaAtual: number = 0;
 
     entrar(jogo: Jogo, app: HTMLElement): void {
         if (Object.keys(this.grafoAtual).length === 0) {
@@ -30,6 +31,17 @@ export class MundoState implements Estado {
         this.grafoAtual = this.geradorDeGrafos.gerarMapa(this.profundidadeAtual, this.tamanhoCamadaAtual);
         this.noAtualId = 'no_0_0';
         this.desbloquearProximosNos('no_0_0');
+
+        // Salva estado da expedição do grafo
+        const dadosDoSave = {
+            profundidadeAtual: this.profundidadeAtual,
+            tamanhoCamadaAtual: this.tamanhoCamadaAtual,
+            grafoAtual: this.grafoAtual,
+            noAtualId: this.noAtualId,
+            mapaAtual: this.mapaAtual
+        };
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dadosDoSave));
+        console.log("[Save] Estado do mundo sincronizado.");
     }
 
     private desbloquearProximosNos(idNo: string): void {
@@ -50,15 +62,15 @@ export class MundoState implements Estado {
 
         switch (no.tipo) {
             case 'Combate': {
-                const quantidade = 2 + Math.floor(jogo.jogador.mapaAtual * 0.5);
-                const inimigos = sortearInimigos(quantidade, jogo.jogador.mapaAtual + 1);
+                const quantidade = 2 + Math.floor(this.mapaAtual * 0.5);
+                const inimigos = sortearInimigos(quantidade, this.mapaAtual + 1);
                 espada1.play().catch(() => {});
                 jogo.transicionarPara(jogo.estados.combate, inimigos);
                 break;
             }
             case 'Boss': {
-                const boss = criarBoss(jogo.jogador.mapaAtual + 1);
-                const aliados = sortearInimigos(1, jogo.jogador.mapaAtual + 1);
+                const boss = criarBoss(this.mapaAtual + 1);
+                const aliados = sortearInimigos(1, this.mapaAtual + 1);
                 magia1.play().catch(() => {});
                 jogo.transicionarPara(jogo.estados.combate, [boss, ...aliados]);
                 break;
@@ -101,7 +113,7 @@ export class MundoState implements Estado {
             if (!temDisponivel && !todosVisitados) {
                 const algumDisponivel = Object.values(this.grafoAtual).some(n => n.status === 'disponivel');
                 if (!algumDisponivel) {
-                    jogo.jogador.mapaAtual++;
+                    this.mapaAtual++;
                     this.profundidadeAtual = Math.min(8, this.profundidadeAtual + 1);
                     this.tamanhoCamadaAtual = Math.min(6, this.tamanhoCamadaAtual + 1);
                     this.gerarNovoMapa(jogo);
@@ -114,7 +126,8 @@ export class MundoState implements Estado {
             profundidadeAtual: this.profundidadeAtual,
             tamanhoCamadaAtual: this.tamanhoCamadaAtual,
             grafoAtual: this.grafoAtual,
-            noAtualId: this.noAtualId
+            noAtualId: this.noAtualId,
+            mapaAtual: this.mapaAtual
         };
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dadosDoSave));
         console.log("[Save] Estado do mundo sincronizado.");
@@ -132,6 +145,7 @@ export class MundoState implements Estado {
             this.tamanhoCamadaAtual = dados.tamanhoCamadaAtual;
             this.grafoAtual = dados.grafoAtual as Record<string, NoGrafo>;
             this.noAtualId = dados.noAtualId;
+            this.mapaAtual = dados.mapaAtual;
 
             console.log("[Save] Grafo da expedição restaurado com sucesso.");
         } catch (e) {

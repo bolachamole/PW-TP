@@ -8,7 +8,6 @@ export class Jogador extends Entidade {
     public xp: number = BALANCAMENTO.JOGADOR.XP_INICIAL;
     public xpParaProximoNivel: number = BALANCAMENTO.JOGADOR.XP_REQUISITO_INICIAL;
     public pocoes: number = BALANCAMENTO.JOGADOR.POCOES_INICIAL;
-    public mapaAtual: number = BALANCAMENTO.JOGADOR.MAPA_INICIAL;
 
     private GerenciadorDeHabilidades = new GerenciadorDeHabilidades();
     private readonly STORAGE_KEY = BALANCAMENTO.JOGADOR.STORAGE_KEY;

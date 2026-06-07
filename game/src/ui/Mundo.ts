@@ -60,7 +60,7 @@ export class Mundo {
         }
 
         let html = `<div class="mundo-info">
-            <span>Mapa ${jogo.jogador.mapaAtual + 1}</span>
+            <span>Mapa ${jogo.estados.mundo.mapaAtual}</span>
             <span>Vida: ${jogo.jogador.hp}/${jogo.jogador.hpMax}</span>
             <span>Nível: ${jogo.jogador.nivel}</span>
         </div>`;

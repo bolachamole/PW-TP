@@ -59,13 +59,13 @@ export class Jogo {
         localStorage.removeItem(BALANCAMENTO.JOGADOR.STORAGE_KEY);
         localStorage.removeItem(BALANCAMENTO.MUNDO.STORAGE_KEY);
         this.jogador = new Jogador();
-        this.jogador.mapaAtual = 0;
 
         // Reseta o estado específico da expedição do grafo para uma run totalmente limpa
         this.estados.mundo.profundidadeAtual = 4;
         this.estados.mundo.tamanhoCamadaAtual = 4;
         this.estados.mundo.grafoAtual = {};
         this.estados.mundo.noAtualId = null;
+        this.estados.mundo.mapaAtual = 0;
 
         this.estados.mundo.gerarNovoMapa(this);
         this.transicionarPara(this.estados.mundo);
@@ -108,7 +108,7 @@ export class Jogo {
         console.log("[DEBUG] Gerando próximo mapa...");
         const mundo = this.estados.mundo;
 
-        this.jogador.mapaAtual++;
+        mundo.mapaAtual++;
         this.jogador.resetarParaNovoMapa();
         this.jogador.salvar();
         
@@ -145,7 +145,7 @@ export class Jogo {
             this.jogador = new Jogador();
 
             // 4. Inicializa o grafo e inicia a expedição
-            this.jogador.mapaAtual = 0;
+            this.estados.mundo.mapaAtual = 1;
             this.estados.mundo.profundidadeAtual = 4;
             this.estados.mundo.tamanhoCamadaAtual = 4;
             this.estados.mundo.grafoAtual = {};

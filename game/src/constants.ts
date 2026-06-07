@@ -33,8 +33,7 @@ export const BALANCAMENTO = {
         
         XP_INICIAL: 0,
         XP_REQUISITO_INICIAL: 50,
-        POCOES_INICIAL: 3,
-        MAPA_INICIAL: 0,
+        POCOES_INICIAL: 2,
         
         // Atributos de Progressão por Level Up
         MULT_XP_PROXIMO_NIVEL: 1.5,
