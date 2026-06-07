@@ -5,7 +5,7 @@ export function spriteEnemy(nome: string): string {
         'Camaleão': SPRITES.camaleao,
         'Cão de caça': SPRITES.cao,
         'Urso': SPRITES.urso,
-        'Formiga': SPRITES.formiga,
+        'Louva Deus': SPRITES.louvadeus,
         'Aranha': SPRITES.aranha,
         'Pássaro': SPRITES.passaro,
         'Vinha Viva': SPRITES.vinha,

@@ -10,8 +10,8 @@ export class MotorIA {
 
             // --- COMPORTAMENTOS DISTINTOS (Requisito Funcionalidades Adicionais) ---
 
-            // Comportamento 1: O Mercenário foge se estiver a morrer
-            if (inimigo.nome === 'Mercenário' && (inimigo.hp / inimigo.hpMax) < 0.3) {
+            // Comportamento 1: O camaleão foge se estiver a morrer
+            if (inimigo.nome === 'Camaleão' && (inimigo.hp / inimigo.hpMax) < 0.3) {
                 this.moverFugindo(inimigo, alvo, inimigos);
                 onAcaoRealizada(`${inimigo.nome} está a recuar em pânico!`);
                 continue;

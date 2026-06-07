@@ -1,60 +1,27 @@
 :root {
     --bg-primary: #0f3b3a;
-    --bg-secondary: rgba(5,20,20,0.95);
-    --bg-card: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px);
-    --accent: #rgba(5,20,20,0.95);
-    --accent2: #c9c9c9;
-    --text-primary: #69A9B9;
-    --text-secondary: #aaa;
+    --bg-secondary: #333;
+    --bg-grad: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px);
+    --cinza: #c9c9c9;
+    --ciano: #69A9B9;
     --hp-color: #e94560;
     --mp-color: #4fc3f7;
     --xp-color: #f5c842;
-    --success: #4caf50;
-    --danger: #f44336;
-    --game-width: 800px;
-    --game-height: 600px;
-}
-
-/* Garante que qualquer tela de jogo tenha tamanho fixo e seja centralizada */
-.menu-screen,
-.tela-mundo, 
-.tela-combate, 
-.tela-loja, 
-.tela-evento, 
-.tela-derrota, 
-.tela-vitoria {
-    width: var(--game-width);
-    height: var(--game-height);
-    position: relative; /* Necessário para que elementos absolutos (como popups) fiquem presos à janela */
-    overflow: hidden;   /* Impede que elementos passem das bordas */
-    background-color: var(--bg-primary); /* Garante que o fundo não fique transparente */
-}
-
-/* Ajuste específico para o Menu para centralizar os botões */
-.menu-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
+    --verde: #4caf50;
+    --vermelho: #f44336;
 }
 
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Courier New', monospace;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
 }
 
 #app {
+    font-family: 'Courier New', monospace;
+    background: var(--bg-grad) var(--bg-primary);
+    color: var(--ciano);
+    overflow: hidden;
+
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -62,84 +29,128 @@ body {
     align-items: center;
 }
 
-/* Menu Principal */
-.menu-screen, .base-forte {
+.tela-mundo,
+.tela-combate,
+.tela-evento,
+.tela-loja,
+.tela-vitoria,
+.tela-derrota {
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
+}
+
+.mundo-info,
+.combate-hud,
+.combate-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    padding: 15px 20px;
+    gap: 30px;
+    font-size: 1.1em;
+    outline: 1px solid var(--cinza);
+}
+
+.menu-selecionado,
+.loja-item.selecionado {
+    outline: 3px solid var(--cinza);
+    outline-offset: 4px;
+}
+
+.evento-btn,
+.derrota-card button,
+.vitoria-card button {
+    align-self: center;
+    font-family: inherit;
+    padding: 12px 30px;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2em;
+}
+
+/* menu principal */
+.menu-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
     justify-content: center;
     gap: 20px;
-    padding: 40px;
+
+    color: var(--cinza);
     text-align: center;
+    background-image: url("../wallpaper.svg");
+    background-size: cover;
 }
 
-.menu-screen h1, .base-forte h1 {
+.menu-screen h1 {
     font-size: 3em;
-    color: var(--accent2);
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-    margin-bottom: 20px;
 }
 
-.menu-screen button, .base-forte button {
+.menu-screen button {
+    align-self: center;
+    color: var(--ciano);
     font-family: inherit;
     font-size: 1.2em;
     padding: 12px 40px;
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border: 2px solid var(--accent2);
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
     border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 200px;
 }
 
-.menu-screen button:hover, .base-forte button:hover {
-    background: var(--accent2);
-    color: var(--bg-primary);
-}
-
-/* Settings */
 .audio-control {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-    margin: 20px 0;
+    justify-content: center;
+    gap: 15px;
 }
 
-.audio-control label {
-    font-size: 1.1em;
-}
-
-.audio-control input[type="range"] {
-    width: 200px;
-}
-
-/* Mundo (Overworld Graph) */
-.tela-mundo {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+/* mundo (aka grafo) */
+.mundo-lista-panel,
+.mundo-acoes {
+    position: absolute;
+    bottom: 20px;
     background: var(--bg-primary);
-    position: relative;
+    padding: 10px;
+    border: 1px solid var(--cinza);
+    border-radius: 8px;
 }
 
-.mundo-info {
+.mundo-acoes {
+    right: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mundo-lista-panel {
+    left: 20px;
+}
+
+.mundo-lista-titulo {
+    padding: 10px;
+    font-weight: bold;
+}
+
+.mundo-lista-itens {
     display: flex;
-    gap: 30px;
-    padding: 15px 20px;
-    background: var(--bg-card);
-    font-size: 1.1em;
-    z-index: 10;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.mundo-grafo {
-    flex: 1;
-    position: relative;
-    overflow: visible;
-    min-height: 400px;
-    padding: 10px 0;
+.mundo-lista-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.mundo-lista-item.ativo {
+    background: var(--bg-primary);
+    border: 1px solid var(--cinza);
+    border-radius: 8px;
 }
 
 .mundo-no {
@@ -150,641 +161,34 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
     transform: translate(-50%, -50%);
-    z-index: 5;
-    position: relative;
-}
-
-.mundo-no.bloqueado {
-    background: #333;
-    border: 2px solid #555;
-    opacity: 0.4;
-    cursor: not-allowed;
+    font-size: 12px;
 }
 
 .mundo-no.disponivel {
-    background: var(--bg-card);
-    border: 2px solid var(--accent2);
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
 }
 
+.mundo-no.selecionado {
+    border: 3px solid var(--ciano);
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.mundo-no.bloqueado,
 .mundo-no.visitado {
-    background: #2a3a5e;
-    border: 2px solid var(--text-secondary);
-    opacity: 0.6;
+    background: var(--bg-secondary);
+    border: 2px solid var(--cinza);
+    opacity: 0.8;
 }
 
-.mundo-no-x {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 22px;
-    height: 22px;
-    background: var(--accent);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75em;
-    font-weight: bold;
-    line-height: 1;
-    box-shadow: 0 0 4px rgba(0,0,0,0.5);
-    z-index: 10;
-    pointer-events: none;
-}
-
+.mundo-no-x,
 .mundo-no-cadeado {
     position: absolute;
     top: -4px;
     right: -4px;
-    font-size: 1em;
-    z-index: 10;
-    pointer-events: none;
-    filter: grayscale(1);
-}
-
-.mundo-no.selecionado {
-    border-color: var(--accent);
-    box-shadow: 0 0 20px var(--accent);
-    transform: translate(-50%, -50%) scale(1.15);
-}
-
-.mundo-no-icone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-}
-
-.mundo-no-tipo {
-    font-size: 0.6em;
-    margin-top: 2px;
-    color: var(--text-secondary);
-}
-
-.mundo-acoes,
-.mundo-lista-panel {
-    position: absolute;
-    bottom: 20px;
-    background: var(--bg-card);
-    border: 1px solid var(--accent2);
-    border-radius: 8px;
-}
-
-.mundo-lista-panel {
-    left: 20px;
-    padding: 10px;
-    min-width: 180px;
-    max-width: 260px;
-    z-index: 15;
-}
-
-.mundo-acoes {
-    right: 20px;
-    padding: 12px 24px;
-    text-align: center;
-    z-index: 10;
-}
-
-.mundo-lista-titulo {
-    font-size: 0.75em;
-    color: var(--accent2);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.mundo-lista-itens {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.mundo-lista-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    background: transparent;
-    transition: background 0.2s;
-}
-
-.mundo-lista-item.ativo {
-    background: var(--bg-card);
-    border: 1px solid var(--accent);
-    outline: none;
-}
-
-.mundo-lista-item .sprite-no {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-}
-
-.mundo-lista-icone {
-    display: flex;
-    align-items: center;
-    width: 26px;
-    height: 26px;
-}
-
-.mundo-lista-nome {
-    flex: 1;
-    font-size: 0.8em;
-    color: var(--text-primary);
-}
-
-.mundo-lista-seta {
-    font-size: 0.8em;
-    color: var(--accent2);
-}
-
-.mundo-lista-vazio {
-    font-size: 0.75em;
-    color: var(--text-secondary);
-    padding: 5px 8px;
-    font-style: italic;
-}
-
-/* Combate */
-.tela-combate {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-secondary);
-    position: relative;
-    overflow: hidden;
-}
-
-.combate-hud {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 8px 16px;
-    gap: 8px;
-    background: rgba(0,0,0,0.5);
-    flex-shrink: 0;
-    max-height: 30vh;
-    overflow-y: auto;
-}
-
-.combate-hud-jogador {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    flex-shrink: 0;
-}
-
-.combate-nome {
-    font-weight: bold;
-    color: var(--accent2);
-    margin-bottom: 3px;
-    font-size: 0.95em;
-}
-
-.barra-container {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.barra-rotulo {
-    font-size: 0.65em;
-    font-weight: bold;
-    min-width: 22px;
-}
-
-.barra-fundo {
-    width: 120px;
-    height: 12px;
-    background: #333;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.barra-fundo.pequeno {
-    width: 50px;
-    height: 8px;
-}
-
-.barra-preenchimento {
-    height: 100%;
-    border-radius: 6px;
-    transition: width 0.3s;
-}
-
-.barra-preenchimento.hp {
-    background: linear-gradient(90deg, #e94560, #ff6b81);
-}
-
-.barra-preenchimento.mp {
-    background: linear-gradient(90deg, #4fc3f7, #81d4fa);
-}
-
-.barra-preenchimento.xp {
-    background: linear-gradient(90deg, #d8de92, #d5d800);
-}
-
-.barra-texto {
-    font-size: 0.75em;
-    min-width: 50px;
-}
-
-.combate-pocoes {
-    font-size: 0.85em;
-    color: var(--xp-color);
-}
-
-.combate-inimigos-hud {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    max-height: 20vh;
-    overflow-y: auto;
-    justify-content: flex-end;
-}
-
-.combate-hud-inimigo {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 0.75em;
-}
-
-.combate-campo {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(var(--largura, 12), 1fr);
-    grid-template-rows: repeat(var(--altura, 6), 1fr);
-    gap: 1px;
-    padding: 6px;
-    background: var(--bg-primary);
-    min-height: 0;
-    overflow: hidden;
-}
-
-.combate-cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(0.7em, 2.5vw, 1.3em);
-    min-height: 30px;
-    transition: background 0.2s;
-}
-
-.combate-cell.movevel {
-    background: rgba(162, 188, 163, 0.5);
-    cursor: pointer;
-}
-
-.combate-cell.alvo-possivel {
-    background: #5a2a3a;
-    cursor: pointer;
-}
-
-.combate-cell.alvo-selecionado {
-    background: #8a1a2a;
-    cursor: pointer;
-    transform: scale(1.05);
-    z-index: 5;
-    position: relative;
-}
-
-.combate-alvo-info {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    padding: 8px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 6px;
-}
-
-.combate-alvo-nome {
-    font-weight: bold;
-    color: var(--accent2);
-    font-size: 1em;
-}
-
-.combate-alvo-hp {
-    color: var(--hp-color);
-    font-size: 0.85em;
-}
-
-.combate-acoes {
-    padding: 6px 12px;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex-shrink: 0;
-    max-height: 25vh;
-    overflow-y: auto;
-}
-
-.combate-turno-info {
-    font-size: 0.85em;
-    color: var(--accent2);
-    text-align: center;
-    flex-shrink: 0;
-}
-
-.combate-habilidades {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.hab-btn {
-    font-family: inherit;
-    padding: 5px 10px;
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border: 1px solid var(--text-secondary);
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.75em;
-    transition: all 0.2s;
-    white-space: nowrap;
-}
-
-.hab-btn:hover {
-    background: var(--accent2);
-    color: var(--bg-primary);
-}
-
-.hab-btn.sem-mp {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.combate-botoes {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.combate-botoes button {
-    font-family: inherit;
-    padding: 6px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.85em;
-    transition: all 0.2s;
-}
-
-.combate-botoes button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.combate-mensagem {
-    position: absolute;
-    bottom: 50%;
-    left: 50%;
-    transform: translate(-50%, 50%);
-    background: rgba(0,0,0,0.85);
-    color: var(--accent2);
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-size: 0.95em;
-    border: 1px solid var(--accent2);
-    animation: fadeIn 0.3s;
-    z-index: 20;
-    max-width: 80%;
-    text-align: center;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-/* Loja */
-.tela-loja {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    background: var(--bg-primary);
-    gap: 20px;
-}
-
-.tela-loja h1 {
-    color: var(--accent2);
-    font-size: 2em;
-}
-
-.loja-xp {
-    font-size: 1.2em;
-    color: var(--xp-color);
-}
-
-.loja-itens {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 500px;
-}
-
-.loja-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: var(--bg-secondary);
-    border: 2px solid var(--bg-card);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.loja-item.caro {
-    opacity: 0.5;
-}
-
-.loja-item-nome {
-    font-weight: bold;
-    color: var(--accent2);
-}
-
-.loja-item-desc {
-    font-size: 0.8em;
-    color: var(--text-secondary);
-}
-
-.loja-item-preco {
-    color: var(--xp-color);
-    font-weight: bold;
-}
-
-.loja-status {
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-.loja-acoes {
-    color: var(--text-secondary);
-    font-size: 0.9em;
-}
-
-.loja-mensagem {
-    color: var(--accent2);
-    font-size: 1.1em;
-    padding: 10px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 6px;
-}
-
-/* Evento */
-.tela-evento {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-primary);
-}
-
-.evento-card {
-    text-align: center;
-    padding: 40px;
-    background: var(--bg-secondary);
-    border: 2px solid var(--accent2);
-    border-radius: 12px;
-    max-width: 500px;
-}
-
-.evento-card h1 {
-    color: var(--accent2);
-    margin-bottom: 15px;
-}
-
-.evento-card p {
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.evento-btn {
-    font-family: inherit;
-    padding: 10px 30px;
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border: 2px solid var(--accent2);
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.1em;
-    transition: all 0.2s;
-}
-
-.evento-btn:hover {
-    background: var(--accent2);
-    color: var(--bg-primary);
-}
-
-.evento-resultado {
-    color: var(--accent2);
-    font-size: 1em;
-    margin-top: 15px;
-}
-
-.evento-sair {
-    color: var(--text-secondary);
-    font-size: 0.9em;
-}
-
-/* Derrota */
-.tela-derrota, .tela-vitoria {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-primary);
-}
-
-.derrota-card, .vitoria-card {
-    text-align: center;
-    padding: 50px;
-    border-radius: 12px;
-    max-width: 500px;
-}
-
-.derrota-card {
-    background: #1a0a0a;
-    border: 2px solid var(--accent);
-}
-
-.vitoria-card {
-    background: #0a1a0a;
-    border: 2px solid var(--success);
-}
-
-.derrota-card h1 {
-    color: var(--accent);
-    font-size: 3em;
-    margin-bottom: 20px;
-}
-
-.vitoria-card h1 {
-    color: var(--accent2);
-    font-size: 3em;
-    margin-bottom: 20px;
-}
-
-.derrota-card p, .vitoria-card p {
-    margin-bottom: 15px;
-    font-size: 1.1em;
-}
-
-.derrota-card button, .vitoria-card button {
-    font-family: inherit;
-    padding: 12px 30px;
-    margin-top: 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1em;
-    transition: all 0.2s;
-}
-
-.derrota-card button {
-    background: var(--accent);
-    color: white;
-    border: 1px solid var(--accent);
-}
-
-.vitoria-card button {
-    background: var(--success);
-    color: white;
-    border: 1px solid var(--success);
-}
-
-.derrota-card button:hover, .vitoria-card button:hover {
-    filter: brightness(1.2);
-}
-
-/* Sprite images */
-.sprite-personagem,
-.sprite-inimigo {
-    width: 70%;
-    height: 70%;
-    object-fit: contain;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
+    font-size: 1.5em;
+    color: var(--verde);
 }
 
 .sprite-no {
@@ -795,45 +199,306 @@ body {
     image-rendering: crisp-edges;
 }
 
-/* --- Modals / Popups Manuais --- */
-.modal-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
+/* evento */
+.tela-evento {
+    align-items: center;
+    justify-content: center;
+}
+
+.evento-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+    border-radius: 12px;
+}
+
+.evento-card h1 {
+    margin-bottom: 15px;
+}
+
+.evento-card p {
+    color: var(--cinza);
+    margin-bottom: 20px;
+}
+
+.evento-btn {
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+    color: var(--ciano);
+}
+
+/* loja */
+.tela-loja {
+    margin-top: 20px;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+}
+
+.loja-xp {
+    font-size: 1.2em;
+    color: var(--xp-color);
+}
+
+.loja-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.loja-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+    border-radius: 8px;
+    color: var(--cinza);
+}
+
+.loja-item.caro {
+    opacity: 0.5;
+}
+
+.loja-item-nome {
+    font-weight: bold;
+}
+
+.loja-item-preco {
+    color: var(--xp-color);
+    font-weight: bold;
+}
+
+.loja-acoes,
+.loja-status {
+    color: var(--cinza);
+    font-size: 0.9em;
+}
+
+.loja-mensagem {
+    color: var(--cinza);
+    font-size: 1.1em;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* combate (aka grelha) */
+.tela-combate {
+    align-items: center;
+}
+
+.sprite-personagem,
+.sprite-inimigo {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.combate-hud {
+    width: 100vw;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.combate-inimigos-hud {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    max-height: 20vh;
+    gap: 20px;
+}
+
+.combate-hud-jogador,
+.combate-hud-inimigo {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    gap: 3px;
+}
+
+.combate-pocoes {
+    color: var(--xp-color);
+    font-weight: bold;
+}
+
+.combate-nome,
+.combate-hud-inimigo span,
+.barra-rotulo {
+    font-weight: bold;
+}
+
+.barra-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.barra-container span {
+    font-weight: normal;
+}
+
+.barra-fundo {
+    width: 120px;
+    height: 12px;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+}
+
+.barra-fundo.pequeno {
+    width: 50px;
+    height: 8px;
+}
+
+.barra-preenchimento {
+    height: 100%;
+    border-radius: 6px;
+}
+
+.barra-preenchimento.hp {
+    background: var(--hp-color);
+}
+
+.barra-preenchimento.mp {
+    background: var(--mp-color);
+}
+
+.barra-preenchimento.xp {
+    background: var(--xp-color);
+}
+
+.combate-mensagem{
+    font-size: 1.5em;
+    align-self: center;
+}
+
+.combate-campo {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 1px;
+    padding: 6px;
+    overflow: hidden;
+}
+
+.combate-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+}
+
+.combate-cell.movevel {
+    background: rgba(162, 188, 163, 0.5);
+}
+
+.combate-cell.alvo-possivel {
+    background: #5a2a3a;
+}
+
+.combate-cell.alvo-selecionado {
+    background: #8a1a2a;
+}
+
+.combate-acoes {
+    width: 100vw;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+}
+
+.combate-habilidades {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.hab-btn,
+.combate-botoes button {
+    font-family: inherit;
+    padding: 5px 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--cinza);
+    border-radius: 5px;
+    color: var(--cinza);
+    font-size: 16px;
+}
+
+.hab-btn.sem-mp,
+.combate-botoes button:disabled {
+    opacity: 0.4;
+}
+
+.combate-botoes {
     display: flex;
     justify-content: center;
+    flex-shrink: 0;
+    gap: 8px;
+    color: var(--ciano);
+}
+
+.combate-botoes button {
+    font-size: 14px;
+    padding: 6px 16px;
+}
+
+.combate-botoes button#btn-usar-pocao {
+    background-color: var(--xp-color);
+    color: var(--bg-secondary);
+}
+
+.combate-botoes button#btn-encerrar-turno {
+    background-color: var(--vermelho);
+    color: #ffffff;
+}
+
+/* telas de vitoria e derrota */
+.tela-vitoria,
+.tela-derrota{
+    justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
-.modal-conteudo {
-    position: relative;
-    background: var(--bg-card);
-    border: 2px solid var(--accent);
-    padding: 30px;
-    border-radius: 8px;
-    width: 400px;
+.derrota-card,
+.vitoria-card {
+    display: flex;
+    flex-direction: column;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 50px;
+    border-radius: 12px;
+    max-width: 500px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
 }
 
-/* Opcional: remover o outline padrão do browser */
-button:focus { outline: none; }
-
-.loja-item.selecionado,
-.menu-selecionado {
-    outline: 3px solid #c9c9c9;
-    outline-offset: 4px;
+.derrota-card h1,
+.vitoria-card h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
 }
 
-/* Destaque para navegação por teclado */
-button.selecionado {
-    outline: 3px solid var(--accent2);
-    transform: scale(1.05);
-    filter: brightness(1.2);
+.derrota-card p,
+.vitoria-card p {
+    font-size: 1em;
+    color: var(--cinza);
 }
-button.menu-selecionado,
-select.menu-selecionado {
-    outline: 3px solid #c9c9c9;
-    outline-offset: 4px;
+
+.derrota-card button {
+    background: var(--vermelho);
+    color: white;
+}
+
+.vitoria-card button {
+    background: var(--verde);
+    color: white;
 }

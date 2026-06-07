@@ -1,8 +1,7 @@
 import { Entidade, type Habilidade } from "./Entidade.js";
-import { BALANCAMENTO } from "../engine/Balancamento.js";
 import { COMPENDIO_HABILIDADES, TABELA_PROGRESSAO_HABILIDADES } from "./Habilidades.js";
 import { GerenciadorDeHabilidades } from "../engine/GerenciadorDeHabilidades.js";
-import { magia2 } from "../constants.js";
+import { magia2, BALANCAMENTO } from "../constants.js";
 
 export class Jogador extends Entidade {
     // Inicialização orientada a dados a partir do arquivo de Balanceamento

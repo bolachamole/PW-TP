@@ -3,16 +3,11 @@ import type { SistemaDeCombate } from "../engine/SistemaDeCombate.js";
 
 export class CombateAcoes {
     private acoesContainer: HTMLDivElement | null = null;
-    private mensagemContainer: HTMLDivElement | null = null;
 
     public construir(pai: HTMLElement): void {
         this.acoesContainer = document.createElement('div');
         this.acoesContainer.className = 'combate-acoes';
         pai.appendChild(this.acoesContainer);
-
-        this.mensagemContainer = document.createElement('div');
-        this.mensagemContainer.className = 'combate-mensagem';
-        pai.appendChild(this.mensagemContainer);
     }
 
     public pintar(jogador: Jogador, motor: SistemaDeCombate): void {
@@ -62,12 +57,6 @@ export class CombateAcoes {
 
             this.acoesContainer.querySelector('#btn-usar-pocao')?.addEventListener('click', () => motor.usarPocao());
             this.acoesContainer.querySelector('#btn-encerrar-turno')?.addEventListener('click', () => motor.encerrarTurnoJogador());
-        }
-
-        // Processa o alerta de texto (Dano causado, Fuga, Sem Mana, etc.)
-        if (this.mensagemContainer) {
-            this.mensagemContainer.innerText = motor.mensagem;
-            this.mensagemContainer.style.display = motor.mensagem ? 'block' : 'none';
         }
     }
 }

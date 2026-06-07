@@ -142,7 +142,6 @@ export class Mundo {
             html += `<div class="mundo-lista-item ${ativo}" data-idx="${i}">
                 <span class="mundo-lista-icone">${this.iconePorTipo(n.tipo)}</span>
                 <span class="mundo-lista-nome">${n.tipo}</span>
-                <span class="mundo-lista-seta">→</span>
             </div>`;
         }
         if (listaNos.length === 0) {

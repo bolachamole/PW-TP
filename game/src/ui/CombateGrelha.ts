@@ -9,7 +9,6 @@ export class CombateGrelha {
     private celulas: HTMLDivElement[][] = [];
 
     /**
-     * FASE 3: Construtor Estrutural
      * Aloca a matriz bidimensional no DOM apenas uma vez no início da batalha.
      */
     public construir(pai: HTMLElement, motor: SistemaDeCombate): void {
@@ -46,9 +45,6 @@ export class CombateGrelha {
         pai.appendChild(this.container);
     }
 
-    /**
-     * O Renderizador Cirúrgico: Altera apenas o interior das células afetadas.
-     */
     public pintar(jogador: Jogador, motor: SistemaDeCombate): void {
         if (!this.container) return;
 

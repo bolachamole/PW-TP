@@ -1,5 +1,6 @@
 import type { Jogador } from "../entities/Jogador.js";
 import type { Entidade } from "../entities/Entidade.js";
+import type { SistemaDeCombate } from "../engine/SistemaDeCombate.js";
 
 export class CombateHUD {
     private container: HTMLDivElement | null = null;
@@ -10,7 +11,7 @@ export class CombateHUD {
         pai.appendChild(this.container);
     }
 
-    public pintar(jogador: Jogador, inimigos: Entidade[]): void {
+    public pintar(jogador: Jogador, inimigos: Entidade[], motor: SistemaDeCombate): void {
         if (!this.container) return;
 
         const hpPercent = Math.max(0, (jogador.hp / jogador.hpMax) * 100);
@@ -37,6 +38,8 @@ export class CombateHUD {
                 </div>
                 <div class="combate-pocoes">Poções: ${jogador.pocoes}</div>
             </div>
+            <div class="combate-mensagem">
+            </div>
             <div class="combate-inimigos-hud">
                 ${inimigos.filter(e => e.vivo).map(e => `
                     <div class="combate-hud-inimigo">
@@ -49,5 +52,13 @@ export class CombateHUD {
                 `).join('')}
             </div>
         `;
+
+        // Processa o alerta de texto (Dano causado, Fuga, Sem Mana, etc.)
+        const mensagemContainer = document.getElementsByClassName('combate-mensagem')[0] as HTMLElement;
+
+        if (mensagemContainer) {
+            mensagemContainer.innerText = motor.mensagem;
+            mensagemContainer.style.display = motor.mensagem ? 'block' : 'none';
+        }
     }
 }

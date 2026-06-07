@@ -3,11 +3,12 @@ import type { Jogo } from "../Jogo.js";
 import { GeradorDeGrafos, type NoGrafo } from "../GeradorDeGrafos.js";
 import { Mundo as MundoUI } from "../../ui/Mundo.js";
 import { sortearInimigos, criarBoss } from "../../entities/Inimigos.js";
-import { espada1, magia1 } from "../../constants.js";
+import { BALANCAMENTO, espada1, magia1 } from "../../constants.js";
 
 export class MundoState implements Estado {
     private mundoUI = new MundoUI();
     private geradorDeGrafos = new GeradorDeGrafos();
+    private readonly STORAGE_KEY = BALANCAMENTO.MUNDO.STORAGE_KEY;
 
     public grafoAtual: Record<string, NoGrafo> = {};
     public profundidadeAtual: number = 4;
@@ -108,6 +109,33 @@ export class MundoState implements Estado {
             }
         }
 
+        // Salva estado da expedição do grafo
+        const dadosDoSave = {
+            profundidadeAtual: this.profundidadeAtual,
+            tamanhoCamadaAtual: this.tamanhoCamadaAtual,
+            grafoAtual: this.grafoAtual,
+            noAtualId: this.noAtualId
+        };
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dadosDoSave));
+        console.log("[Save] Estado do mundo sincronizado.");
+
         jogo.transicionarPara(this);
+    }
+
+    public carregar(): void {
+        const dadosSalvos = localStorage.getItem(this.STORAGE_KEY);
+        if (!dadosSalvos) return;
+
+        try {
+            const dados = JSON.parse(dadosSalvos);
+            this.profundidadeAtual = dados.profundidadeAtual;
+            this.tamanhoCamadaAtual = dados.tamanhoCamadaAtual;
+            this.grafoAtual = dados.grafoAtual as Record<string, NoGrafo>;
+            this.noAtualId = dados.noAtualId;
+
+            console.log("[Save] Grafo da expedição restaurado com sucesso.");
+        } catch (e) {
+            console.error("[ERRO] Falha crítica ao ler save do grafo.", e);
+        }
     }
 }

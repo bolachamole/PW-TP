@@ -1,5 +1,4 @@
 import { Entidade, type Habilidade } from "./Entidade.js";
-import { BALANCAMENTO } from "../engine/Balancamento.js";
 import { criarCamaleao } from "./enemies/Camaleao.js";
 import { criarCaoDeCaca } from "./enemies/CaoDeCaca.js";
 import { criarUrso } from "./enemies/Urso.js";
@@ -8,7 +7,7 @@ import { criarAranha } from "./enemies/Aranha.js";
 import { criarPassaro } from "./enemies/Passaro.js";
 import { criarVinha } from "./enemies/Vinha.js";
 import { criarMercenario } from "./enemies/Mercenario.js";
-import { explosao1, explosao2, magia1 } from "../constants.js";
+import { explosao1, explosao2, magia1, BALANCAMENTO } from "../constants.js";
 
 type CriadorDeInimigo = (nivel: number) => Entidade;
 

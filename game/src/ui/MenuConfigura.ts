@@ -1,4 +1,6 @@
 import { NavegacaoTecladoMenu } from "../ui/NavegacaoTecladoMenu.js";
+import { somGlobal } from "../constants.js";
+import { jogo } from "../engine/Jogo.js";
 
 export class MenuConfigura {
 
@@ -18,7 +20,7 @@ export class MenuConfigura {
                     min="0"
                     max="1"
                     step="0.1"
-                    value="0.5"
+                    value="${jogo.volume}"
                 >
             </div>
 
@@ -57,11 +59,11 @@ export class MenuConfigura {
         });
 
         slider.addEventListener("input", () => {
-
-            console.log(
-                `[DEBUG] Volume alterado para: ${slider.value}`
-            );
-
+            somGlobal.forEach(som => som.volume = parseFloat(slider.value));
+            jogo.volume = parseFloat(slider.value);
+            console.log(`[DEBUG] Volume alterado para: ${slider.value}`);
+            const dados = { "global": slider.value }
+            localStorage.setItem("volume", JSON.stringify(dados));
         });
 
         this.navegacao?.destruir();

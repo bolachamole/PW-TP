@@ -1,3 +1,4 @@
+import { BALANCAMENTO } from "../constants.js";
 import { jogo } from "../engine/Jogo.js";
 import { MenuConfigura } from "../ui/MenuConfigura.js";
 import { NavegacaoTecladoMenu } from "../ui/NavegacaoTecladoMenu.js";
@@ -15,10 +16,6 @@ export class MenuPrincipal {
         this.elementoDOM.id = 'menu-principal';
         this.elementoDOM.className = 'menu-screen';
 
-        this.elementoDOM.style.backgroundImage = `
-            linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8))
-        `;
-
         containerPai.appendChild(this.elementoDOM);
         this.conteudoInicialMenuPrincipal();
     }
@@ -27,14 +24,14 @@ export class MenuPrincipal {
         if (!this.elementoDOM) return;
 
         // Verifica dinamicamente no localStorage se existe progresso anterior salvo
-        const temSaveAnterior = localStorage.getItem('caves_of_memory_save') !== null;
+        const temSaveAnterior = localStorage.getItem(BALANCAMENTO.JOGADOR.STORAGE_KEY) !== null && localStorage.getItem(BALANCAMENTO.MUNDO.STORAGE_KEY) !== null;
 
         this.elementoDOM.innerHTML = `
             <h1>Caves of Nodes</h1>
             
             <h3>Setas para navegar, R para selecionar<h3>
             
-            ${temSaveAnterior ? `<button id="btn-continuar" style="background-color: var(--success); color: white;">Continuar Jogo</button>` : ''}
+            ${temSaveAnterior ? `<button id="btn-continuar">Continuar Jogo</button>` : ''}
             <br></br>
             <button id="btn-jogar">${temSaveAnterior ? 'Novo Jogo (Apagar Progresso)' : 'Novo Jogo'}</button>
             <br></br>
@@ -42,6 +39,12 @@ export class MenuPrincipal {
         `;
 
         this.configurarEventos(temSaveAnterior);
+
+        const volume = localStorage.getItem('volume')
+        if (volume){
+            const volumeAlterado = JSON.parse(volume);
+            jogo.volume = parseFloat(volumeAlterado.global);
+        }
     }
 
     private configurarEventos(temSaveAnterior: boolean): void {

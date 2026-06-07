@@ -47,7 +47,7 @@ export class Combate {
         if (!this.elementoDOM) return;
 
         // Cada componente sabe exatamente como desenhar os seus próprios dados
-        this.hud.pintar(jogo.jogador, this.motor.inimigos);
+        this.hud.pintar(jogo.jogador, this.motor.inimigos, this.motor);
         this.grelha.pintar(jogo.jogador, this.motor);
         this.acoes.pintar(jogo.jogador, this.motor);
     }

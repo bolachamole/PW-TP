@@ -1,8 +1,6 @@
 import { Jogador } from "../entities/Jogador.js";
 import type { NoGrafo } from "./GeradorDeGrafos.js";
 import type { Estado } from "./Estado.js";
-
-// Importação das instâncias dos estados decompostos
 import { MenuInicialState } from "./states/MenuInicialState.js";
 import { MundoState } from "./states/MundoState.js";
 import { CombateState } from "./states/CombateState.js";
@@ -11,10 +9,12 @@ import { EventoState } from "./states/EventoState.js";
 import { DerrotaState } from "./states/DerrotaState.js";
 import { VitoriaState } from "./states/VitoriaState.js";
 import { Vitoria } from "../ui/Vitoria.js";
+import { BALANCAMENTO } from "../constants.js";
 
 export class Jogo {
     public app: HTMLElement;
     public jogador: Jogador;
+    public volume: number;
     private tela_vitoria: Vitoria;
 
     // Registrador central de estados (mantém dados internos como o Grafo preservados)
@@ -33,22 +33,21 @@ export class Jogo {
     constructor() {
         this.app = document.getElementById("app")!;
         this.jogador = new Jogador();
+        this.volume = 0.5;
         this.tela_vitoria = new Vitoria();
     }
 
     /**
-     * Motor da FSM: Desativa o estado anterior e injeta o novo contexto de execução
+     * Desativa o estado anterior e injeta o novo contexto de execução
      */
     public transicionarPara(novoEstado: Estado, ...args: any[]): void {
         if (this.estadoAtual) {
             this.estadoAtual.sair();
         }
         this.estadoAtual = novoEstado;
-        console.log(`[FSM DEBUG] Transição de estado ativa para: ${novoEstado.constructor.name}`);
+        console.log(`[DEBUG] Transição de estado ativa para: ${novoEstado.constructor.name}`);
         this.estadoAtual.entrar(this, this.app, ...args);
     }
-
-    // --- MÉTODOS DE COMPATIBILIDADE DE API (Evita quebras nas telas de UI) ---
 
     executando(): void {
         if (!this.estadoAtual) {
@@ -57,7 +56,8 @@ export class Jogo {
     }
 
     iniciarPartida(): void {
-        localStorage.removeItem('caves_of_memory_save');
+        localStorage.removeItem(BALANCAMENTO.JOGADOR.STORAGE_KEY);
+        localStorage.removeItem(BALANCAMENTO.MUNDO.STORAGE_KEY);
         this.jogador = new Jogador();
         this.jogador.mapaAtual = 0;
 
@@ -132,14 +132,13 @@ export class Jogo {
     }
 
     /**
-     * Reseta completamente a memória do jogo (Herói) para um Novo Jogo do zero.
+     * Reseta completamente o localStorage para um Novo Jogo do zero.
      */
     novoJogoPartida(): void {
-        console.log("[FSM] Limpando registros do localStorage para Novo Jogo...");
+        console.log("[DEBUG] Limpando registros do localStorage para Novo Jogo...");
 
         // 1. Apaga fisicamente as chaves do navegador
-        localStorage.removeItem('caves_of_memory_save');
-        localStorage.removeItem('caves_of_nodes_progresso');
+        localStorage.removeItem(BALANCAMENTO.JOGADOR.STORAGE_KEY);
 
         // 3. Re-instancia um jogador totalmente limpo com atributos iniciais de balanceamento
         import("../entities/Jogador.js").then(({ Jogador }) => {
@@ -161,18 +160,12 @@ export class Jogo {
      * Carrega os dados persistidos e continua a expedição.
      */
     continuarPartida(): void {
-        console.log("[FSM] Continuando jogo: Sincronizando dados salvos do Herói...");
+        console.log("[DEBUG] Continuando jogo: Sincronizando dados salvos do Herói...");
 
         // Recarrega os atributos e grimório que estão guardados no save
         this.jogador.carregar();
-
-        // Garante que o estado modular do mapa de nós seja resetado para a nova run, preservando o nível do herói
-        this.estados.mundo.profundidadeAtual = 4;
-        this.estados.mundo.tamanhoCamadaAtual = 4;
-        this.estados.mundo.grafoAtual = {};
-        this.estados.mundo.noAtualId = null;
-
-        this.estados.mundo.gerarNovoMapa(this);
+        this.estados.mundo.carregar();
+        
         this.transicionarPara(this.estados.mundo);
     }
 }
