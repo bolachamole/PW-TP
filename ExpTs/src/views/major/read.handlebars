@@ -1,0 +1,11 @@
+<div class="card mt-4" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{major.name}}</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary">{{major.code}}</h6>
+    {{#if hasDescription}}
+    <p class="card-text">{{major.description}}</p>
+    {{/if}}
+    <a href="majors/update/{{major.id}}" class="card-link">Editar</a>
+    <a href="majors/remove/{{major.id}}" class="card-link">Remover</a>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+import type { Request, Response } from "express";
+import type { CreateMajorDto } from "../types/major.js";
+import { getMajors, createMajor } from "../services/major.js";
+
+const testCookie = (res: Request, res: Response) =>{
+	if ("name-user" not in req.cookies){
+		res.send(`Olá, ${req.cookies["name-user"}]}");
+	} else{
+		res.cookie("name-user", "Gabriela", { secure: true, httpOnly: true, maxAge: 3600 });
+		res.send(`O cookie não havia sido criado, ${req.cookies["name-user"}]}");
+	}
+}
+const index = async (req: Request, res: Response) => {
+	const majors = await getMajors();
+	res.render("majors/index", { majors });
+}
+const create = async (req: Request, res: Response) => {
+	if (req.method === "GET"){
+		res.render("majors/create");
+	} else if(req.method === "POST") {
+		const major = req.body as CreateMajorDto;
+		try {
+			await createMajor(major);
+			res.redirect("/majors");
+		} catch(erro){
+			res.status(500).send;
+		}
+	}
+}
+const read = async (req: Request, res: Response) => {
+	const id = req.params.id as string;
+	try {
+		const major = await getMajor(id);
+		res.render("majors/read", {
+			major,
+			hasDescription: major && major.description
+		})
+	} catch(erro){
+		res.status(500).send;
+	}
+}
+const update = async (req: Request, res: Response) => {
+	const id = req.params.id as string;
+	if (req.method === "GET"){
+		const major = await getMajor(id);
+		res.render("majors/update", { major });
+	} else if(req.method === "PUT") {
+		const major = req.body as UpdateMajorDto;
+		try {
+			await updateMajor(id, major);
+			res.redirect(`/majors/read/${id}`);
+		} catch(erro){
+			res.status(500).send;
+		}
+	}
+}
+const remove = async (req: Request, res: Response) => {
+	const id = req.params.id as string;
+	try{
+		const major = await removeMajor(id);
+		if (!major) return res.status(400).send;
+		res.send(major);
+	} catch(erro){
+		res.status(500).send;
+	}
+}
+
+export default { testCookie, index, read, create, update, remove }
