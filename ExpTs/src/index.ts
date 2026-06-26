@@ -3,15 +3,15 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import router from "./router/router.js";
 import validateEnv from "./utils/validateEnv.js";
+import cookieParser from "cookie-parser";
+import session from "express-session";
 import { engine } from "express-handlebars";
 import { logger } from "./middlewares/logger.js";
 import { listCredits, listIntegrantes, listProfs, listTechs } from "./helpers/helpers.js";
-import cookieParser from "cookie-parser";
-import session from "express-session";
 import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
-validateEnv();
+const env = validateEnv();
 
 declare module "express-session" {
 	interface SessionData {
@@ -20,7 +20,7 @@ declare module "express-session" {
 }
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = env.PORT;
 const publicPath = `${process.cwd()}/public`;
 
 app.use(express.urlencoded({ extended: false }));
@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(session({
     name: "sid",
 	genid: () => uuidv4(),
-	secret: process.env.SECRET!,
+	secret: env.SECRET,
 	resave: false,
 	saveUninitialized: false,
 	rolling: true,

@@ -1,22 +1,14 @@
 import type { Request, Response } from "express";
-import type { CreateMajorDto } from "../types/major.js";
-import { getMajors, createMajor } from "../services/major.js";
+import type { CreateMajorDto, UpdateMajorDto } from "../types/major.js";
+import { getMajors, createMajor, getMajor, updateMajor, removeMajor } from "../services/major.js";
 
-const testCookie = (res: Request, res: Response) =>{
-	if ("name-user" not in req.cookies){
-		res.send(`Olá, ${req.cookies["name-user"}]}");
-	} else{
-		res.cookie("name-user", "Gabriela", { secure: true, httpOnly: true, maxAge: 3600 });
-		res.send(`O cookie não havia sido criado, ${req.cookies["name-user"}]}");
-	}
-}
 const index = async (req: Request, res: Response) => {
 	const majors = await getMajors();
 	res.render("majors/index", { majors });
 }
 const create = async (req: Request, res: Response) => {
 	if (req.method === "GET"){
-		res.render("majors/create");
+		res.render("major/create");
 	} else if(req.method === "POST") {
 		const major = req.body as CreateMajorDto;
 		try {
@@ -31,7 +23,7 @@ const read = async (req: Request, res: Response) => {
 	const id = req.params.id as string;
 	try {
 		const major = await getMajor(id);
-		res.render("majors/read", {
+		res.render("major/read", {
 			major,
 			hasDescription: major && major.description
 		})
@@ -43,8 +35,8 @@ const update = async (req: Request, res: Response) => {
 	const id = req.params.id as string;
 	if (req.method === "GET"){
 		const major = await getMajor(id);
-		res.render("majors/update", { major });
-	} else if(req.method === "PUT") {
+		res.render("major/update", { major });
+	} else if(req.method === "POST") {
 		const major = req.body as UpdateMajorDto;
 		try {
 			await updateMajor(id, major);
@@ -65,4 +57,4 @@ const remove = async (req: Request, res: Response) => {
 	}
 }
 
-export default { testCookie, index, read, create, update, remove }
+export default { index, read, create, update, remove }
