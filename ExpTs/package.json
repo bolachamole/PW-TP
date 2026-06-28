@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "sass public/scss/main.scss public/css/main.css --watch & nodemon --exec tsx src/index.ts",
+    "start": "sass --watch public/scss:public/css --load-path=public/scss & nodemon --exec tsx src/index.ts",
     "deploy": "tsc",
     "start:prod": "node build/index.js"
   },

@@ -14,14 +14,15 @@
     <tr>
       <th scope="row">1</th>
       <td>{{code}}</td>
-      <td>{{nome}}</td>
+      <td>{{name}}</td>
       <td class="text-end">
         <a href="/majors/read{{id}}"><i class="bi bi-eye"></i></a>
         <a href="/majors/update{{id}}"><i class="bi bi-pencil-square"></i></a>
-        <a href="/majors/remove{{id}}" data-bs-toggle="modal" data-bs-target="remove-modal-{{id}}"><i class="bi bi-trash"></i></a>
+        <a href="/majors/remove{{id}}" data-bs-toggle="modal" data-bs-target="remove-modal-{{id}}"><i
+            class="bi bi-trash"></i></a>
       </td>
     </tr>
-    {{#each}}
+    {{/each}}
   </tbody>
 </table>
 {{#each majors}}
