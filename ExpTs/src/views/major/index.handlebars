@@ -7,19 +7,19 @@
     <tr>
       <th scope="col">Código</th>
       <th scope="col">Nome</th>
+      <th scope="col">Descrição</th>
     </tr>
   </thead>
   <tbody>
     {{#each majors}}
     <tr>
-      <th scope="row">1</th>
       <td>{{code}}</td>
       <td>{{name}}</td>
+      <td>{{description}} </td>
       <td class="text-end">
-        <a href="/majors/read{{id}}"><i class="bi bi-eye"></i></a>
-        <a href="/majors/update{{id}}"><i class="bi bi-pencil-square"></i></a>
-        <a href="/majors/remove{{id}}" data-bs-toggle="modal" data-bs-target="remove-modal-{{id}}"><i
-            class="bi bi-trash"></i></a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#remove-modal={{id}}">
+          Delete Course
+        </button>
       </td>
     </tr>
     {{/each}}
@@ -38,9 +38,10 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" onlick={removeMajor('{{id}}')}>Confirmar</button>
+        <button type="button" class="btn btn-primary" onclick={removeMajor('{{id}}')}>Confirmar</button>
       </div>
     </div>
   </div>
 </div>
 {{/each}}
+<script src="/js/removeMajor.js"></script>

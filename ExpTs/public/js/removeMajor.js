@@ -1,8 +1,8 @@
 function removeMajor(id) {
-  fetch(`majors/remove/${id}`, {
+  fetch(`major/remove/${id}`, {
     method: "POST",
   }).then((res) => {
-    if (resp.ok) {
+    if (res.ok) {
       window.location.reload();
     }
   });
