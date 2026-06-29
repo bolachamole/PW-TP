@@ -7,19 +7,19 @@ const index = (req: Request, res: Response) => {
 
 const about = (req: Request, res: Response) => {
     const pessoas = [
-        {nome: "Giovana Lins Cavalcanti", funcao: "entidades e CSS"},
-        {nome: "Arthur Capucho", funcao: "engine e UI"},
-        {nome: "Arthur Matias", funcao: "engine e UI"}
+        { nome: "Giovana Lins Cavalcanti", funcao: "entidades e CSS" },
+        { nome: "Arthur Capucho", funcao: "engine e UI" },
+        { nome: "Arthur Matias", funcao: "engine e UI" }
     ]
     const sons = [
-        {titulo: "Orange Free Sounds", url: "https://www.cavesofqud.com/"},
-        {titulo: "SoundBible", url: "https://soundbible.com"},
-        {titulo: "YouTube Audio Libray", url: "https://www.youtube.com/audiolibrary"}
+        { titulo: "Orange Free Sounds", url: "https://www.cavesofqud.com/" },
+        { titulo: "SoundBible", url: "https://soundbible.com" },
+        { titulo: "YouTube Audio Libray", url: "https://www.youtube.com/audiolibrary" }
     ]
     const sprites = [
-        {titulo: "Caves of Qud", url: "https://www.cavesofqud.com/"}
+        { titulo: "Caves of Qud", url: "https://www.cavesofqud.com/" }
     ]
-    res.render("about", { pessoas, sons, sprites, titulo: "“Caves of Nodes”" });
+    res.render("main/about", { pessoas, sons, sprites, titulo: "“Caves of Nodes”" });
 }
 
 const lorem = (req: Request, res: Response) => {
@@ -27,14 +27,14 @@ const lorem = (req: Request, res: Response) => {
 }
 
 const hb1 = (req: Request, res: Response) => {
-    res.render('hb1', { mensagem: 'Olá, você está aprendendo Express + HBS!' });
+    res.render("main/hb1", { mensagem: 'Olá, você está aprendendo Express + HBS!' });
 }
 
 const hb2 = (req: Request, res: Response) => {
-    res.render('hb2', {
-        nome: 'React',
-        tipo: 'library',
-        poweredByNode: true
+    res.render("main/hb2", {
+        name: 'React',
+        type: 'library',
+        poweredByNodejs: true
     });
 };
 
@@ -45,7 +45,7 @@ const hb3 = (req: Request, res: Response) => {
         { nome: 'Edleno Moura', sala: 1236 },
         { nome: 'Elaine Harada', sala: 1231 },
     ];
-    res.render("hb3", { profs });
+    res.render("main/hb3", { profs });
 }
 
 const hb4 = (req: Request, res: Response) => {
@@ -58,7 +58,7 @@ const hb4 = (req: Request, res: Response) => {
         { name: 'Docker', type: 'Virtualization', poweredByNodejs: false },
         { name: 'Sequelize', type: 'ORM tool', poweredByNodejs: true },
     ];
-    res.render("hb4", { technologies });
+    res.render("main/hb4", { technologies });
 }
 
 export default { index, about, lorem, hb1, hb2, hb3, hb4 };
