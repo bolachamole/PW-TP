@@ -42,7 +42,7 @@ const update = async (req: Request, res: Response) => {
 		const major = req.body as UpdateMajorDto;
 		try {
 			await updateMajor(id, major);
-			res.redirect(`/majors/read/${id}`);
+			res.redirect(`/major/read/${id}`);
 		} catch (erro) {
 			res.status(500).send;
 		}
