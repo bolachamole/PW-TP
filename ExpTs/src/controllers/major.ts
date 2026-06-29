@@ -4,18 +4,20 @@ import { getMajors, createMajor, getMajor, updateMajor, removeMajor } from "../s
 
 const index = async (req: Request, res: Response) => {
 	const majors = await getMajors();
-	res.render("majors/index", { majors });
+	res.render("major/index", { majors });
 }
 const create = async (req: Request, res: Response) => {
-	if (req.method === "GET"){
+	if (req.method === "GET") {
 		res.render("major/create");
-	} else if(req.method === "POST") {
+	} else if (req.method === "POST") {
 		const major = req.body as CreateMajorDto;
+		console.log("Body:", req.body);
 		try {
 			await createMajor(major);
-			res.redirect("/majors");
-		} catch(erro){
-			res.status(500).send;
+			res.status(200).json({ redirect: "/major" });
+		} catch (erro) {
+			console.error("Erro ao criar major:", erro);
+			res.status(500).json({ error: "Erro ao criar major" });
 		}
 	}
 }
@@ -27,32 +29,33 @@ const read = async (req: Request, res: Response) => {
 			major,
 			hasDescription: major && major.description
 		})
-	} catch(erro){
+	} catch (erro) {
 		res.status(500).send;
 	}
 }
 const update = async (req: Request, res: Response) => {
 	const id = req.params.id as string;
-	if (req.method === "GET"){
+	if (req.method === "GET") {
 		const major = await getMajor(id);
 		res.render("major/update", { major });
-	} else if(req.method === "POST") {
+	} else if (req.method === "POST") {
 		const major = req.body as UpdateMajorDto;
 		try {
 			await updateMajor(id, major);
-			res.redirect(`/majors/read/${id}`);
-		} catch(erro){
-			res.status(500).send;
+			res.status(200).json({ redirect: `/major/read/${id}` });
+		} catch (erro) {
+			console.error("Erro ao criar major:", erro);
+			res.status(500).json({ error: "Erro ao criar major" });
 		}
 	}
 }
 const remove = async (req: Request, res: Response) => {
 	const id = req.params.id as string;
-	try{
+	try {
 		const major = await removeMajor(id);
 		if (!major) return res.status(400).send;
 		res.send(major);
-	} catch(erro){
+	} catch (erro) {
 		res.status(500).send;
 	}
 }

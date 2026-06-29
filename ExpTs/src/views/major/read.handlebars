@@ -5,7 +5,10 @@
     {{#if hasDescription}}
     <p class="card-text">{{major.description}}</p>
     {{/if}}
-    <a href="majors/update/{{major.id}}" class="card-link">Editar</a>
-    <a href="majors/remove/{{major.id}}" class="card-link">Remover</a>
+
+    <button onclick="location.href='/../../major/update/{{major.id}}'" type="button"
+      class="btn btn btn-primary">Editar</button>
+    <button type="button" class="btn btn-primary" onclick={removeMajor('{{major.id}}')}>Remover</button>
   </div>
 </div>
+<script src="/js/removeMajor.js"></script>
