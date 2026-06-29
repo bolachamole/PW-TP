@@ -1,7 +1,28 @@
+<link rel="stylesheet" href="/css/forms.css">
 <div classes="mt-4 flex">
   <h3>Lista de cursos</h3>
   <h4><a href="/major">Link para os cursos<i class="bi bi-arrow-left-square"></i></a></h4>
 </div>
-<form action="major/update{{major.id}} method=" post">
-  {{majorForm}}
+
+<div class="card ms-5 mt-4" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{major.name}}</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary">{{major.code}}</h6>
+  </div>
+</div>
+<form class="myform">
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Nome</label>
+    <input type="text" class="form-control" id="majorName">
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Sigla</label>
+    <input type="text" class="form-control" id="majorCode">
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Descrição</label>
+    <textarea class="form-control" id="majorDesc" rows="3"></textarea>
+  </div>
+  <button type="button" onclick="updateMajor()" class="btn btn-primary">Atualizar</button>
 </form>
+<script src="/js/updateMajor.js"></script>

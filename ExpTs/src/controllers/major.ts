@@ -42,9 +42,10 @@ const update = async (req: Request, res: Response) => {
 		const major = req.body as UpdateMajorDto;
 		try {
 			await updateMajor(id, major);
-			res.redirect(`/major/read/${id}`);
+			res.status(200).json({ redirect: `/major/read/${id}` });
 		} catch (erro) {
-			res.status(500).send;
+			console.error("Erro ao criar major:", erro);
+			res.status(500).json({ error: "Erro ao criar major" });
 		}
 	}
 }
