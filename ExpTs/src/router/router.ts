@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/', main.index);
 router.get("/about", main.about);
-router.get('/lorem/:id', main.lorem);
+router.get("/lorem/:id", main.lorem);
 router.get("/hb1", main.hb1);
 router.get("/hb2", main.hb2);
 router.get("/hb3", main.hb3);
@@ -25,5 +25,6 @@ router.all("/major/update/:id", majorController.update);
 router.post("/major/remove/:id", majorController.remove);
 
 router.get("/play", gameController.play);
+router.get("/ranking", gameController.ranking);
 
 export default router;

@@ -7,7 +7,7 @@ dotenv.config();
 validateEnv();
 
 export const logger = (formato: string) => {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return (req: Request, _res: Response, next: NextFunction) => {
         const pastaLogs = process.env.LOGS_PATH || './logs';
         
         if (!fs.existsSync(pastaLogs)) {

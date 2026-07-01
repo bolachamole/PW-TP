@@ -3,7 +3,7 @@ function removeMajor(id) {
     method: "POST",
   }).then((res) => {
     if (res.ok) {
-      window.location.reload();
+	    window.location.href = "/major";
     }
   });
 }

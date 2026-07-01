@@ -1,4 +1,3 @@
-import dotenv from "dotenv/config";
 import express from "express";
 import morgan from "morgan";
 import router from "./router/router.js";
@@ -9,8 +8,6 @@ import { engine } from "express-handlebars";
 import { logger } from "./middlewares/logger.js";
 import { listCredits, listIntegrantes, listProfs, listTechs } from "./helpers/helpers.js";
 import { v4 as uuidv4 } from "uuid";
-
-//dotenv.config(); // Essa linha não funciona no meu ambiente
 
 const env = validateEnv();
 
@@ -48,6 +45,7 @@ app.use(logger("completo"));
 app.use(router);
 
 app.engine("handlebars", engine({
+	partialsDir: "src/views/partials",
 	helpers: {
 		listProfs,
 		listTechs,

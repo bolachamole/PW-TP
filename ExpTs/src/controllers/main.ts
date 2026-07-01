@@ -1,11 +1,15 @@
 import type { Request, Response } from 'express';
 import { loremIpsum } from 'lorem-ipsum';
 
-const index = (req: Request, res: Response) => {
-    res.end('Welcome to Web academy!');
-};
+const index = async (req: Request, res: Response) =>{
+	if (req.session.uid){
+		res.redirect("/play");
+	} else {
+		res.redirect("/login");
+	}
+}
 
-const about = (req: Request, res: Response) => {
+const about = (_req: Request, res: Response) => {
     const pessoas = [
         { nome: "Giovana Lins Cavalcanti", funcao: "entidades e CSS" },
         { nome: "Arthur Capucho", funcao: "engine e UI" },
@@ -26,11 +30,11 @@ const lorem = (req: Request, res: Response) => {
     res.send(loremIpsum({ count: Number(req.params.id), format: "html", suffix: "\n", units: "paragraphs" }));
 }
 
-const hb1 = (req: Request, res: Response) => {
+const hb1 = (_req: Request, res: Response) => {
     res.render("main/hb1", { mensagem: 'Olá, você está aprendendo Express + HBS!' });
 }
 
-const hb2 = (req: Request, res: Response) => {
+const hb2 = (_req: Request, res: Response) => {
     res.render("main/hb2", {
         name: 'React',
         type: 'library',
@@ -38,7 +42,7 @@ const hb2 = (req: Request, res: Response) => {
     });
 };
 
-const hb3 = (req: Request, res: Response) => {
+const hb3 = (_req: Request, res: Response) => {
     const profs = [
         { nome: 'David Fernandes', sala: 1238 },
         { nome: 'Horácio Fernandes', sala: 1233 },
@@ -48,7 +52,7 @@ const hb3 = (req: Request, res: Response) => {
     res.render("main/hb3", { profs });
 }
 
-const hb4 = (req: Request, res: Response) => {
+const hb4 = (_req: Request, res: Response) => {
     const technologies = [
         { name: 'Express', type: 'Framework', poweredByNodejs: true },
         { name: 'Laravel', type: 'Framework', poweredByNodejs: false },

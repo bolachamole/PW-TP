@@ -1,7 +1,11 @@
 import type { Request, Response } from "express";
 
-const play = (req: Request, res: Response) => {
+const play = (_req: Request, res: Response) => {
 	res.render("game/play");
 }
 
-export default { play };
+const ranking = (_req: Request, res: Response) => {
+	res.render("game/ranking");
+}
+
+export default { play, ranking };
