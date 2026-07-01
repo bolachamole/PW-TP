@@ -1,7 +1,6 @@
-<link rel="stylesheet" href="/css/forms.css">
 <div class="mt-4 flex">
   <h3>Lista de cursos</h3>
-  <h4><a href="/major">Link para os cursos<i class="bi bi-arrow-left-square"></i></a></h4>
+  <h4><a href="/major"><i class="bi bi-arrow-left-square"></i>Voltar os cursos</a></h4>
 </div>
 
 <div class="card ms-5 mt-4" style="width: 18rem;">
@@ -10,6 +9,6 @@
     <h6 class="card-subtitle mb-2 text-body-secondary">{{major.code}}</h6>
   </div>
 </div>
-<form action="/major/update/{{major.id}}" method="post">
+<form class="myform" action="/major/update/{{major.id}}" method="post">
   {{> majorForm}}
 </form>

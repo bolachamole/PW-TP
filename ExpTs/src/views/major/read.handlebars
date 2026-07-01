@@ -1,3 +1,4 @@
+<h4><a href="/major"><i class="bi bi-arrow-left-square"></i>Voltar os cursos</a></h4>
 <div class="card mt-4" style="width: 18rem;">
   <div class="card-body">
     <h5 class="card-title">{{major.name}}</h5>
@@ -5,10 +6,8 @@
     {{#if hasDescription}}
     <p class="card-text">{{major.description}}</p>
     {{/if}}
-
-    <button onclick="location.href='/../../major/update/{{major.id}}'" type="button"
-      class="btn btn btn-primary">Editar</button>
-    <button type="button" class="btn btn-primary" onclick={removeMajor('{{major.id}}')}>Remover</button>
+    <a href="/major/update/{{major.id}}" class="card-link">Editar</a>
+    <button type="button" class="btn btn-primary" onclick="removeMajor('{{major.id}}')">Remover</button>
   </div>
 </div>
 <script src="/js/removeMajor.js"></script>

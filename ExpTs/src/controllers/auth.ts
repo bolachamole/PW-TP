@@ -10,12 +10,18 @@ const signup = async (req: Request, res: Response) =>{
 		if (req.body.password !== req.body.passwordConfirmation) {
 			res.status(400).json({ error: "As senhas não são iguais" });
 		} else{
-			const data = req.body as SignUpDto;
+			const data: SignUpDto = {
+				name: req.body.name,
+				email: req.body.email,
+				password: req.body.password,
+				majorId: req.body.majorId
+			};
 			try {
 				const user = await createUser(data);
 				req.session.uid = user.id;
 				res.redirect("/play");
 			} catch(erro){
+				console.log(erro);
 				res.status(500).send()
 			}
 		}

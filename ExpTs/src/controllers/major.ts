@@ -14,7 +14,7 @@ const create = async (req: Request, res: Response) => {
 		console.log("Body:", req.body);
 		try {
 			await createMajor(major);
-			res.status(200).json({ redirect: "/major" });
+			res.redirect("/major");
 		} catch (erro) {
 			console.error("Erro ao criar major:", erro);
 			res.status(500).json({ error: "Erro ao criar major" });
@@ -44,7 +44,7 @@ const update = async (req: Request, res: Response) => {
 		const major = req.body as UpdateMajorDto;
 		try {
 			await updateMajor(id, major);
-			res.status(200).json({ redirect: `/major/read/${id}` });
+			res.redirect(`/major/read/${id}`);
 		} catch (erro) {
 			console.error("Erro ao atualizar major:", erro);
 			res.status(500).json({ error: "Erro ao atualizar major" });
