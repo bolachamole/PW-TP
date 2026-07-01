@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import type { CreateMajorDto, UpdateMajorDto } from "../types/major.js";
 import { getMajors, createMajor, getMajor, updateMajor, removeMajor } from "../services/major.js";
 
-const index = async (req: Request, res: Response) => {
+const index = async (_req: Request, res: Response) => {
 	const majors = await getMajors();
 	res.render("major/index", { majors });
 }
@@ -25,12 +25,14 @@ const read = async (req: Request, res: Response) => {
 	const id = req.params.id as string;
 	try {
 		const major = await getMajor(id);
-		res.render("major/read", {
-			major,
-			hasDescription: major && major.description
-		})
+		if (major){
+			res.render("major/read", {
+				major,
+				hasDescription: major && major.description
+			})
+		}
 	} catch (erro) {
-		res.status(500).send;
+		res.status(500).send();
 	}
 }
 const update = async (req: Request, res: Response) => {
@@ -44,8 +46,8 @@ const update = async (req: Request, res: Response) => {
 			await updateMajor(id, major);
 			res.status(200).json({ redirect: `/major/read/${id}` });
 		} catch (erro) {
-			console.error("Erro ao criar major:", erro);
-			res.status(500).json({ error: "Erro ao criar major" });
+			console.error("Erro ao atualizar major:", erro);
+			res.status(500).json({ error: "Erro ao atualizar major" });
 		}
 	}
 }
@@ -53,10 +55,9 @@ const remove = async (req: Request, res: Response) => {
 	const id = req.params.id as string;
 	try {
 		const major = await removeMajor(id);
-		if (!major) return res.status(400).send;
 		res.send(major);
 	} catch (erro) {
-		res.status(500).send;
+		res.status(500).send();
 	}
 }
 

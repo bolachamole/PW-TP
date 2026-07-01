@@ -5,15 +5,19 @@ import { getMajors } from "../services/major.js";
 
 const signup = async (req: Request, res: Response) =>{
 	if (req.method === "GET"){
-		res.render("auth/signup", { majors: getMajors() });
+		res.render("auth/signup", { majors: await getMajors() });
 	} else if (req.method === "POST"){
-		const data = req.body as SignUpDto;
-		try {
-			const user = await createUser(data);
-			req.session.uid = user.id;
-			res.redirect("/play");
-		} catch(erro){
-			res.status(500).send()
+		if (req.body.password !== req.body.passwordConfirmation) {
+			res.status(400).json({ error: "As senhas não são iguais" });
+		} else{
+			const data = req.body as SignUpDto;
+			try {
+				const user = await createUser(data);
+				req.session.uid = user.id;
+				res.redirect("/play");
+			} catch(erro){
+				res.status(500).send()
+			}
 		}
 	}
 }

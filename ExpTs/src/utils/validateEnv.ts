@@ -1,5 +1,7 @@
 import { cleanEnv, num, port, str } from 'envalid';
+import dotenv from "dotenv";
 
+dotenv.config();
 const validateEnv = () => {
     return cleanEnv(process.env, {
         PORT: port(),

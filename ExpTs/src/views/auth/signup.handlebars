@@ -1,4 +1,22 @@
-<div>
-
-	asddas
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="nome" name="name">
+  <label for="nome">Nome</label>
 </div>
+<div class="form-floating mb-3">
+  <input type="email" class="form-control" id="floatingInput" name="email">
+  <label for="floatingInput">Email</label>
+</div>
+<div class="form-floating">
+  <input type="password" class="form-control" id="floatingPassword1" name="password">
+  <label for="floatingPassword1">Senha</label>
+</div>
+<div class="form-floating">
+  <input type="password" class="form-control" id="floatingPassword2" name="passwordConfirmation">
+  <label for="floatingPassword2">Repita a senha</label>
+</div>
+<select class="form-select" aria-label="Escolher curso" name="majorId">
+  <option selected>Curso</option>
+  {{#each majors}}
+  <option value="{{code}}">{{name}}</option>
+  {{/each}}
+</select>
