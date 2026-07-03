@@ -1,0 +1,96 @@
+import { BALANCAMENTO } from "../constants.js";
+import { jogo } from "../engine/Jogo.js";
+import { MenuConfigura } from "../ui/MenuConfigura.js";
+import { NavegacaoTecladoMenu } from "../ui/NavegacaoTecladoMenu.js";
+export class MenuPrincipal {
+    elementoDOM = null;
+    menuConfigura = new MenuConfigura();
+    navegacao;
+    abrir(containerPai) {
+        if (document.getElementById('menu-principal'))
+            return;
+        this.elementoDOM = document.createElement('div');
+        this.elementoDOM.id = 'menu-principal';
+        this.elementoDOM.className = 'menu-screen';
+        containerPai.appendChild(this.elementoDOM);
+        this.conteudoInicialMenuPrincipal();
+    }
+    conteudoInicialMenuPrincipal() {
+        if (!this.elementoDOM)
+            return;
+        // Verifica dinamicamente no localStorage se existe progresso anterior salvo
+        const temSaveAnterior = localStorage.getItem(BALANCAMENTO.JOGADOR.STORAGE_KEY) !== null && localStorage.getItem(BALANCAMENTO.MUNDO.STORAGE_KEY) !== null;
+        this.elementoDOM.innerHTML = `
+            <h1>Caves of Nodes</h1>
+            
+            <h3>Setas para navegar, R para selecionar<h3>
+            
+            ${temSaveAnterior ? `<button id="btn-continuar">Continuar Jogo</button>` : ''}
+            <br></br>
+            <button id="btn-jogar">${temSaveAnterior ? 'Novo Jogo (Apagar Progresso)' : 'Novo Jogo'}</button>
+            <br></br>
+            <button id="btn-configurar">Configurações</button>
+        `;
+        this.configurarEventos(temSaveAnterior);
+        const volume = localStorage.getItem('volume');
+        if (volume) {
+            const volumeAlterado = JSON.parse(volume);
+            jogo.volume = parseFloat(volumeAlterado.global);
+        }
+    }
+    configurarEventos(temSaveAnterior) {
+        if (!this.elementoDOM)
+            return;
+        //const btnContinuar = this.elementoDOM.querySelector('#btn-continuar');
+        const btnJogar = this.elementoDOM.querySelector('#btn-jogar');
+        const btnConfigurar = this.elementoDOM.querySelector('#btn-configurar');
+        // Evento do botão Continuar Jogo
+        /** 
+        if (temSaveAnterior && btnContinuar) {
+            btnContinuar.addEventListener('click', () => {
+                console.log("[DEBUG] Carregando a jornada salva...");
+                this.fechar();
+                jogo.continuarPartida();
+            });
+        }
+        */
+        // Evento do botão Novo Jogo
+        btnJogar?.addEventListener('click', () => {
+            
+            //if (temSaveAnterior) {
+                // Confirmação de segurança para evitar cliques acidentais que apaguem o progresso do usuário
+            //    const confirmarSubescrita = confirm("Alerta: Existe um jogo salvo na memória. Começar um Novo Jogo apagará permanentemente todo o seu progresso anterior. Deseja continuar?");
+            //    if (!confirmarSubescrita)
+            //        return;
+            //}
+            console.log("[DEBUG] Iniciando uma nova partida do zero absoluto...");
+            this.fechar();
+            jogo.novoJogoPartida();
+        });
+        btnConfigurar?.addEventListener('click', () => {
+            console.log("[DEBUG] Acessando menu de configurações...");
+            this.elementoDOM.innerHTML = '';
+            this.menuConfigura.abrir(this.elementoDOM, () => {
+                this.conteudoInicialMenuPrincipal();
+            });
+        });
+        const elementos = [];
+        //if (btnContinuar) {
+        //    elementos.push(btnContinuar);
+        //}
+        elementos.push(btnJogar);
+        elementos.push(btnConfigurar);
+        this.navegacao?.destruir();
+        this.navegacao =
+            new NavegacaoTecladoMenu(elementos);
+        this.navegacao.iniciar();
+    }
+    fechar() {
+        if (this.elementoDOM) {
+            this.navegacao?.destruir();
+            this.elementoDOM.remove();
+            this.elementoDOM = null;
+            console.log("[DEBUG] MenuPrincipal deletado com sucesso do DOM.");
+        }
+    }
+}

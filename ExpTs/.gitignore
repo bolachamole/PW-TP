@@ -5,3 +5,4 @@ logs/
 public/css/
 /src/generated/prisma
 prisma/migrations
+PW-TP/docs/

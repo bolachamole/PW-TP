@@ -59,6 +59,7 @@ app.set("views", "src/views");
 app.use('/css', express.static(`${publicPath}/css`));
 app.use('/js', express.static(`${publicPath}/js`));
 app.use('/img', express.static(`${publicPath}/img`));
+app.use('/game', express.static(`${publicPath}/game`));
 
 app.listen(PORT, () => {
 	console.log(`Express app iniciada na porta ${PORT}.`);

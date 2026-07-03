@@ -1,0 +1,504 @@
+:root {
+    --bg-primary: #0f3b3a;
+    --bg-secondary: #333;
+    --bg-grad: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px);
+    --cinza: #c9c9c9;
+    --ciano: #69A9B9;
+    --hp-color: #e94560;
+    --mp-color: #4fc3f7;
+    --xp-color: #f5c842;
+    --verde: #4caf50;
+    --vermelho: #f44336;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    font-family: 'Courier New', monospace;
+    background: var(--bg-grad) var(--bg-primary);
+    color: var(--ciano);
+    overflow: hidden;
+
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tela-mundo,
+.tela-combate,
+.tela-evento,
+.tela-loja,
+.tela-vitoria,
+.tela-derrota {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.mundo-info,
+.combate-hud,
+.combate-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    padding: 15px 20px;
+    gap: 30px;
+    font-size: 1.1em;
+    outline: 1px solid var(--cinza);
+}
+
+.menu-selecionado,
+.loja-item.selecionado {
+    outline: 3px solid var(--cinza);
+    outline-offset: 4px;
+}
+
+.evento-btn,
+.derrota-card button,
+.vitoria-card button {
+    align-self: center;
+    font-family: inherit;
+    padding: 12px 30px;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2em;
+}
+
+/* menu principal */
+.menu-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    gap: 20px;
+
+    color: var(--cinza);
+    text-align: center;
+    background-image: url("../wallpaper.svg");
+    background-size: cover;
+}
+
+.menu-screen h1 {
+    font-size: 3em;
+}
+
+.menu-screen button {
+    align-self: center;
+    color: var(--ciano);
+    font-family: inherit;
+    font-size: 1.2em;
+    padding: 12px 40px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+    border-radius: 8px;
+}
+
+.audio-control {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* mundo (aka grafo) */
+.mundo-lista-panel,
+.mundo-acoes {
+    position: absolute;
+    bottom: 20px;
+    background: var(--bg-primary);
+    padding: 10px;
+    border: 1px solid var(--cinza);
+    border-radius: 8px;
+}
+
+.mundo-acoes {
+    right: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mundo-lista-panel {
+    left: 20px;
+}
+
+.mundo-lista-titulo {
+    padding: 10px;
+    font-weight: bold;
+}
+
+.mundo-lista-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.mundo-lista-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.mundo-lista-item.ativo {
+    background: var(--bg-primary);
+    border: 1px solid var(--cinza);
+    border-radius: 8px;
+}
+
+.mundo-no {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+}
+
+.mundo-no.disponivel {
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+}
+
+.mundo-no.selecionado {
+    border: 3px solid var(--ciano);
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.mundo-no.bloqueado,
+.mundo-no.visitado {
+    background: var(--bg-secondary);
+    border: 2px solid var(--cinza);
+    opacity: 0.8;
+}
+
+.mundo-no-x,
+.mundo-no-cadeado {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 1.5em;
+    color: var(--verde);
+}
+
+.sprite-no {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* evento */
+.tela-evento {
+    align-items: center;
+    justify-content: center;
+}
+
+.evento-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+    border-radius: 12px;
+}
+
+.evento-card h1 {
+    margin-bottom: 15px;
+}
+
+.evento-card p {
+    color: var(--cinza);
+    margin-bottom: 20px;
+}
+
+.evento-btn {
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+    color: var(--ciano);
+}
+
+/* loja */
+.tela-loja {
+    margin-top: 20px;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+}
+
+.loja-xp {
+    font-size: 1.2em;
+    color: var(--xp-color);
+}
+
+.loja-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.loja-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+    border-radius: 8px;
+    color: var(--cinza);
+}
+
+.loja-item.caro {
+    opacity: 0.5;
+}
+
+.loja-item-nome {
+    font-weight: bold;
+}
+
+.loja-item-preco {
+    color: var(--xp-color);
+    font-weight: bold;
+}
+
+.loja-acoes,
+.loja-status {
+    color: var(--cinza);
+    font-size: 0.9em;
+}
+
+.loja-mensagem {
+    color: var(--cinza);
+    font-size: 1.1em;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* combate (aka grelha) */
+.tela-combate {
+    align-items: center;
+}
+
+.sprite-personagem,
+.sprite-inimigo {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.combate-hud {
+    width: 100vw;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.combate-inimigos-hud {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    max-height: 20vh;
+    gap: 20px;
+}
+
+.combate-hud-jogador,
+.combate-hud-inimigo {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    gap: 3px;
+}
+
+.combate-pocoes {
+    color: var(--xp-color);
+    font-weight: bold;
+}
+
+.combate-nome,
+.combate-hud-inimigo span,
+.barra-rotulo {
+    font-weight: bold;
+}
+
+.barra-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.barra-container span {
+    font-weight: normal;
+}
+
+.barra-fundo {
+    width: 120px;
+    height: 12px;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+}
+
+.barra-fundo.pequeno {
+    width: 50px;
+    height: 8px;
+}
+
+.barra-preenchimento {
+    height: 100%;
+    border-radius: 6px;
+}
+
+.barra-preenchimento.hp {
+    background: var(--hp-color);
+}
+
+.barra-preenchimento.mp {
+    background: var(--mp-color);
+}
+
+.barra-preenchimento.xp {
+    background: var(--xp-color);
+}
+
+.combate-mensagem{
+    font-size: 1.5em;
+    align-self: center;
+}
+
+.combate-campo {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 1px;
+    padding: 6px;
+    overflow: hidden;
+}
+
+.combate-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+}
+
+.combate-cell.movevel {
+    background: rgba(162, 188, 163, 0.5);
+}
+
+.combate-cell.alvo-possivel {
+    background: #5a2a3a;
+}
+
+.combate-cell.alvo-selecionado {
+    background: #8a1a2a;
+}
+
+.combate-acoes {
+    width: 100vw;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+}
+
+.combate-habilidades {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.hab-btn,
+.combate-botoes button {
+    font-family: inherit;
+    padding: 5px 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--cinza);
+    border-radius: 5px;
+    color: var(--cinza);
+    font-size: 16px;
+}
+
+.hab-btn.sem-mp,
+.combate-botoes button:disabled {
+    opacity: 0.4;
+}
+
+.combate-botoes {
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+    gap: 8px;
+    color: var(--ciano);
+}
+
+.combate-botoes button {
+    font-size: 14px;
+    padding: 6px 16px;
+}
+
+.combate-botoes button#btn-usar-pocao {
+    background-color: var(--xp-color);
+    color: var(--bg-secondary);
+}
+
+.combate-botoes button#btn-encerrar-turno {
+    background-color: var(--vermelho);
+    color: #ffffff;
+}
+
+/* telas de vitoria e derrota */
+.tela-vitoria,
+.tela-derrota{
+    justify-content: center;
+    align-items: center;
+}
+
+.derrota-card,
+.vitoria-card {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 50px;
+    border-radius: 12px;
+    max-width: 500px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cinza);
+}
+
+.derrota-card h1,
+.vitoria-card h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.derrota-card p,
+.vitoria-card p {
+    font-size: 1em;
+    color: var(--cinza);
+}
+
+.derrota-card button {
+    background: var(--vermelho);
+    color: white;
+}
+
+.vitoria-card button {
+    background: var(--verde);
+    color: white;
+}
