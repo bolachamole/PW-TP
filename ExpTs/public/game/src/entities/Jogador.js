@@ -10,6 +10,7 @@ export class Jogador extends Entidade {
     GerenciadorDeHabilidades = new GerenciadorDeHabilidades();
     STORAGE_KEY = BALANCAMENTO.JOGADOR.STORAGE_KEY;
     kills = 0;
+    bossKills = 0;
     constructor() {
         // Inicializa os atributos e monta o kit de skills mapeando as chaves configuradas
         super(BALANCAMENTO.JOGADOR.NOME_PADRAO, BALANCAMENTO.JOGADOR.HP_INICIAL, BALANCAMENTO.JOGADOR.MP_INICIAL, BALANCAMENTO.JOGADOR.ATK_INICIAL, BALANCAMENTO.JOGADOR.DEF_INICIAL, BALANCAMENTO.JOGADOR.SKILLS_INICIAIS.map(chave => ({ ...COMPENDIO_HABILIDADES[chave] })));
@@ -129,6 +130,7 @@ export class Jogador extends Entidade {
         this.defesaBonus = 0;
         this.habilidades = BALANCAMENTO.JOGADOR.SKILLS_INICIAIS.map(chave => ({ ...COMPENDIO_HABILIDADES[chave] }));
         this.kills = 0;
+        this.bossKills = 0;
         localStorage.removeItem(this.STORAGE_KEY);
     }
     aplicarHabilidadeTemporaria(hab) {

@@ -173,7 +173,10 @@ export class SistemaDeCombate {
                 const antes = ini.vivo;
                 const dano = Math.floor(jogo.jogador.atk * multArea);
                 ini.receberDano(dano);
-                if (antes && !ini.vivo) jogo.jogador.kills++;
+                if (antes && !ini.vivo) {
+                    if (ini.nome === "Guardião do Abismo") jogo.jogador.bossKills++;
+                    else jogo.jogador.kills++;
+                }
             }
             hab.som?.play();
             this.mensagem = `${hab.nome}! Causou dano em todos os inimigos ao alcance!`;
@@ -191,7 +194,8 @@ export class SistemaDeCombate {
             hab.som?.play();
             alvo.receberDano(dano);
             if (!alvo.vivo) {
-                jogo.jogador.kills++;
+                if (alvo.nome === "Guardião do Abismo") jogo.jogador.bossKills++;
+                else jogo.jogador.kills++;
                 this.mensagem = `${hab.nome}! ${alvo.nome} derrotado!`;
             }
             else {
