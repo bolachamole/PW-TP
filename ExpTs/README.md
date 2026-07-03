@@ -19,6 +19,11 @@ docker run -d \
 mysql:latest
 ```
 
+```
+docker run -d --name game-app-db --network game-app-network -p 3307:3306 -e MYSQL_ROOT_PASSWORD=senhasegura -e MYSQL_DATABASE=game -v game-app-volume:/var/lib/mysql mysql:latest
+```
+
+
 3.
 ```
 docker run -d \
@@ -30,6 +35,10 @@ docker run -d \
 -e PMA_PASSWORD=senhasegura \
 -p 8081:80 \
 phpmyadmin/phpmyadmin
+```
+
+```
+docker run -d --name game-app-phpmyadmin --network game-app-network -e PMA_HOST=game-app-db -e PMA_PORT=3306 -e PMA_USER=root -e PMA_PASSWORD=senhasegura -p 8081:80 phpmyadmin/phpmyadmin
 ```
 
 4.

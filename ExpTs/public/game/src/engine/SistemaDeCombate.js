@@ -170,8 +170,10 @@ export class SistemaDeCombate {
                 distanciaEntre({ x: jogo.jogador.x, y: jogo.jogador.y }, { x: e.x, y: e.y }) <= hab.alcance);
             const multArea = hab.multiplicador ?? 1.5;
             for (const ini of alvos) {
+                const antes = ini.vivo;
                 const dano = Math.floor(jogo.jogador.atk * multArea);
                 ini.receberDano(dano);
+                if (antes && !ini.vivo) jogo.jogador.kills++;
             }
             hab.som?.play();
             this.mensagem = `${hab.nome}! Causou dano em todos os inimigos ao alcance!`;
@@ -189,6 +191,7 @@ export class SistemaDeCombate {
             hab.som?.play();
             alvo.receberDano(dano);
             if (!alvo.vivo) {
+                jogo.jogador.kills++;
                 this.mensagem = `${hab.nome}! ${alvo.nome} derrotado!`;
             }
             else {

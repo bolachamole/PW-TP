@@ -29,7 +29,7 @@ export class Derrota {
     calcularScore() {
         const jogador = jogo.jogador;
         const mundo = jogo.estados.mundo;
-        return mundo.mapaAtual * 10000 + jogador.nivel * 100 + jogador.xp;
+        return mundo.mapaAtual + jogador.xp + jogador.kills * 10;
     }
     processarPenalidadesMorte() {
         const jogador = jogo.jogador;

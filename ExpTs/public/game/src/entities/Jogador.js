@@ -9,6 +9,7 @@ export class Jogador extends Entidade {
     pocoes = BALANCAMENTO.JOGADOR.POCOES_INICIAL;
     GerenciadorDeHabilidades = new GerenciadorDeHabilidades();
     STORAGE_KEY = BALANCAMENTO.JOGADOR.STORAGE_KEY;
+    kills = 0;
     constructor() {
         // Inicializa os atributos e monta o kit de skills mapeando as chaves configuradas
         super(BALANCAMENTO.JOGADOR.NOME_PADRAO, BALANCAMENTO.JOGADOR.HP_INICIAL, BALANCAMENTO.JOGADOR.MP_INICIAL, BALANCAMENTO.JOGADOR.ATK_INICIAL, BALANCAMENTO.JOGADOR.DEF_INICIAL, BALANCAMENTO.JOGADOR.SKILLS_INICIAIS.map(chave => ({ ...COMPENDIO_HABILIDADES[chave] })));
@@ -34,8 +35,8 @@ export class Jogador extends Entidade {
                 .filter(h => !this.habilidadeTemporaria || h.nome !== this.habilidadeTemporaria.nome)
                 .map(h => h.nome)
         };
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dadosDoSave));
-        console.log("[Save] Atributos e grimório do herói sincronizados.");
+        //localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dadosDoSave));
+        //console.log("[Save] Atributos e grimório do herói sincronizados.");
     }
     carregar() {
         const dadosSalvos = localStorage.getItem(this.STORAGE_KEY);
@@ -127,6 +128,7 @@ export class Jogador extends Entidade {
         this.vivo = true;
         this.defesaBonus = 0;
         this.habilidades = BALANCAMENTO.JOGADOR.SKILLS_INICIAIS.map(chave => ({ ...COMPENDIO_HABILIDADES[chave] }));
+        this.kills = 0;
         localStorage.removeItem(this.STORAGE_KEY);
     }
     aplicarHabilidadeTemporaria(hab) {
