@@ -23,7 +23,7 @@
     overflow: hidden;
 
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 56px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,7 +36,7 @@
 .tela-vitoria,
 .tela-derrota {
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 56px);
     display: flex;
     flex-direction: column;
 }
