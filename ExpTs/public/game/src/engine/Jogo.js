@@ -103,6 +103,10 @@ export class Jogo {
     getNoAtualId() {
         return this.estados.mundo.noAtualId;
     }
+    calcularScore() {
+        const p = this.jogador;
+        return this.estados.mundo.mapaAtual + p.xp + p.kills * 10 + p.bossKills * 20;
+    }
     /**
      * Reseta completamente o localStorage para um Novo Jogo do zero.
      */

@@ -49,10 +49,12 @@ export class Mundo {
         if (listaNos.length > 0 && listaNos[this.indiceLista]) {
             this.noSelecionado = listaNos[this.indiceLista].id;
         }
+        const score = jogo.calcularScore();
         let html = `<div class="mundo-info">
             <span>Mapa ${jogo.estados.mundo.mapaAtual}</span>
             <span>Vida: ${jogo.jogador.hp}/${jogo.jogador.hpMax}</span>
             <span>Nível: ${jogo.jogador.nivel}</span>
+            <span>Score: ${score}</span>
         </div>`;
         html += `<div class="mundo-grafo" style="--profundidade: ${profundidade};">`;
         const nodePositions = new Map();

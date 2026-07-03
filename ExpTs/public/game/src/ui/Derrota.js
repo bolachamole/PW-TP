@@ -27,9 +27,7 @@ export class Derrota {
         }
     }
     calcularScore() {
-        const jogador = jogo.jogador;
-        const mundo = jogo.estados.mundo;
-        return mundo.mapaAtual + jogador.xp + jogador.kills * 10 + jogador.bossKills * 20;
+        return jogo.calcularScore();
     }
     processarPenalidadesMorte() {
         const jogador = jogo.jogador;
@@ -54,6 +52,9 @@ export class Derrota {
                     <p>Mapas Concluídos: <strong>${jogo.estados.mundo.mapaAtual}</strong></p>
                     <p>Nível Preservado: <strong>${jogo.jogador.nivel}</strong></p>
                     <p>XP Atual: <strong>${jogo.jogador.xp}/${jogo.jogador.xpParaProximoNivel}</strong></p>
+                    <p>Monstros Abatidos: <strong>${jogo.jogador.kills}</strong></p>
+                    <p>Bosses Derrotados: <strong>${jogo.jogador.bossKills}</strong></p>
+                    <p>Score Final: <strong>${this.calcularScore()}</strong></p>
                     
                     <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
                     
