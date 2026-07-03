@@ -3,31 +3,28 @@ export class Derrota {
     elementoDOM = null;
     listenerTeclado = null;
     abrir(containerPai) {
-        this.enviarScore();
         if (document.getElementById('tela-derrota'))
             return;
+        this.scoreFinal = jogo.calcularScore();
         this.elementoDOM = document.createElement('div');
         this.elementoDOM.id = 'tela-derrota';
         this.elementoDOM.className = 'tela-derrota';
         containerPai.appendChild(this.elementoDOM);
         this.processarPenalidadesMorte();
+        this.enviarScore();
         this.renderizar();
     }
     async enviarScore() {
-        const score = this.calcularScore();
         try {
             await fetch("/api/score", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ score }),
+                body: JSON.stringify({ score: this.scoreFinal }),
             });
         }
         catch (e) {
             console.warn("[Score] Falha ao enviar score:", e);
         }
-    }
-    calcularScore() {
-        return jogo.calcularScore();
     }
     processarPenalidadesMorte() {
         const jogador = jogo.jogador;
@@ -54,7 +51,7 @@ export class Derrota {
                     <p>XP Atual: <strong>${jogo.jogador.xp}/${jogo.jogador.xpParaProximoNivel}</strong></p>
                     <p>Monstros Abatidos: <strong>${jogo.jogador.kills}</strong></p>
                     <p>Bosses Derrotados: <strong>${jogo.jogador.bossKills}</strong></p>
-                    <p>Score Final: <strong>${this.calcularScore()}</strong></p>
+                    <p>Score Final: <strong>${this.scoreFinal}</strong></p>
                     
                     <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
                     
