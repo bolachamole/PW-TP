@@ -41,11 +41,10 @@ export class MenuPrincipal {
     configurarEventos(temSaveAnterior) {
         if (!this.elementoDOM)
             return;
-        //const btnContinuar = this.elementoDOM.querySelector('#btn-continuar');
+        const btnContinuar = this.elementoDOM.querySelector('#btn-continuar');
         const btnJogar = this.elementoDOM.querySelector('#btn-jogar');
         const btnConfigurar = this.elementoDOM.querySelector('#btn-configurar');
-        // Evento do botão Continuar Jogo
-        /** 
+        // Evento do botão Continuar Jogo 
         if (temSaveAnterior && btnContinuar) {
             btnContinuar.addEventListener('click', () => {
                 console.log("[DEBUG] Carregando a jornada salva...");
@@ -53,16 +52,16 @@ export class MenuPrincipal {
                 jogo.continuarPartida();
             });
         }
-        */
+        
         // Evento do botão Novo Jogo
         btnJogar?.addEventListener('click', () => {
             
-            //if (temSaveAnterior) {
+            if (temSaveAnterior) {
                 // Confirmação de segurança para evitar cliques acidentais que apaguem o progresso do usuário
-            //    const confirmarSubescrita = confirm("Alerta: Existe um jogo salvo na memória. Começar um Novo Jogo apagará permanentemente todo o seu progresso anterior. Deseja continuar?");
-            //    if (!confirmarSubescrita)
-            //        return;
-            //}
+                const confirmarSubescrita = confirm("Alerta: Existe um jogo salvo na memória. Começar um Novo Jogo apagará permanentemente todo o seu progresso anterior. Deseja continuar?");
+                if (!confirmarSubescrita)
+                    return;
+            }
             console.log("[DEBUG] Iniciando uma nova partida do zero absoluto...");
             this.fechar();
             jogo.novoJogoPartida();
@@ -75,9 +74,9 @@ export class MenuPrincipal {
             });
         });
         const elementos = [];
-        //if (btnContinuar) {
-        //    elementos.push(btnContinuar);
-        //}
+        if (btnContinuar) {
+            elementos.push(btnContinuar);
+        }
         elementos.push(btnJogar);
         elementos.push(btnConfigurar);
         this.navegacao?.destruir();

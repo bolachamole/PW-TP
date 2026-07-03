@@ -70,10 +70,10 @@ export class Jogador extends Entidade {
         this.xp += xpFinal;
         if (this.xp >= this.xpParaProximoNivel) {
             this.subirDeNivel();
-            this.salvar();
+            //this.salvar();
             return true;
         }
-        this.salvar();
+        //this.salvar();
         return false;
     }
     subirDeNivel() {
