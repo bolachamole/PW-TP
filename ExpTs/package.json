@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "sass --watch public/scss:public/css --load-path=public/scss & nodemon --exec tsx src/index.ts",
-    "deploy": "tsc",
+    "deploy": "sass public/scss:public/css & tsc",
     "start:prod": "node build/index.js"
   },
   "dependencies": {
